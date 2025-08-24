@@ -3,14 +3,26 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Layout from './Layout.jsx'
-import { Hero, Contact,Destinations, Gallery, AllDestinations, Services, Testimonials,AdminTrekForm, SignInForm, SignUpForm ,DestinationDetails , BookingForm, AdminPanel, EditTrekForm, checkUserAuthLoader, checkAdminAuthLoader, Unauthorized} from './components'
+import { Hero, Contact,Destinations, Gallery, AllDestinations, Services, Testimonials,AdminTrekForm, SignInForm, SignUpForm ,DestinationDetails , BookingForm, AdminPanel, EditTrekForm, checkUserAuthLoader, checkAdminAuthLoader, Unauthorized, AdminTreckBookings} from './components'
 
 import {Provider} from "react-redux"
 import { store } from './App/store.js'
 
 
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+
 
 const router = createBrowserRouter([
+      {
+        path: 'signup',
+        element: <SignUpForm />
+      },
+      {
+        path: 'signin',
+        element: <SignInForm />
+      },
   {
       path : '/admin',
       element : <AdminPanel/>,
@@ -24,6 +36,11 @@ const router = createBrowserRouter([
       {
         path: '/editTrek',
         element: <EditTrekForm />,
+        loader : checkAdminAuthLoader,
+      },
+       {
+        path: '/admintreckbookings',
+        element: <AdminTreckBookings />,
         loader : checkAdminAuthLoader,
       },
   {
@@ -61,14 +78,6 @@ const router = createBrowserRouter([
         element: <Contact />
       },
       {
-        path: 'signup',
-        element: <SignUpForm />
-      },
-      {
-        path: 'signin',
-        element: <SignInForm />
-      },
-      {
         path : 'destinationdetails',
         element : <DestinationDetails/>
       },
@@ -88,6 +97,7 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')).render(
   <Provider store = {store}>
+    <ToastContainer theme='dark' />
     <RouterProvider router={router} />
   </Provider>,
 )

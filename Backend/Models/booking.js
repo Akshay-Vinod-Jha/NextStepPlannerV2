@@ -12,6 +12,11 @@ const bookingSchema = new mongoose.Schema({
     ref: 'Destination',
     required: true
   },
+  bookingId: {
+    type: String,
+    required: true,
+    unique: true
+  },
   dateSlot: {
     startDate: {
       type: Date,
@@ -26,6 +31,11 @@ const bookingSchema = new mongoose.Schema({
     type: Number,
     default: 1
   },
+  bookingStatus: {
+    type: String,
+    enum: ['confirmed', 'cancelled', 'pending', 'booked','upcoming'],
+    default : 'pending'
+  },
   paymentStatus: {
     type: String,
     enum: ['pending', 'paid', 'cancelled'],
@@ -39,6 +49,10 @@ const bookingSchema = new mongoose.Schema({
   },
   amountPaid: {
     type: Number
+  },
+  mobileNumber : {
+    type : Number,
+    required : true,
   }
 }, { timestamps: true });
 

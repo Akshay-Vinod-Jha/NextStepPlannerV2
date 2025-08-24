@@ -4,7 +4,7 @@ import { handleTreckBooking } from "../Controllers/bookHandler.js";
 
 const bookingRouter = express.Router();
 
-bookingRouter.post("/",handleTreckBooking);
+bookingRouter.post("/booktrek/:destinationId",handleTreckBooking);
 
 
 export default bookingRouter;

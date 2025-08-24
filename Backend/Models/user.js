@@ -5,27 +5,24 @@ import { createTokenForUser } from "../Services/authentication.js";
 const userSchema = new mongoose.Schema({
     name : {
         type : String,
-        required : true,
-    },
-    contactNumber : {
-        type : Number,
-        required : true,
-        unique : true,
-    },
-    password : {
-        type : String,
-        required : true,
-        unique : true,
     },
     email : {
         type : String,
-        required : false,
+        required : true,
+        unique : true,
+    },
+    googleId:{
+        type : String,
+    },
+    password : {
+        type : String,
     },
     salt : {
         type : String,
     },
     role :{
         type : String,
+        enum : ['USER','ADMIN'],
         default : "USER",
         required : false,
     }
@@ -50,13 +47,20 @@ userSchema.pre("save",function(next)
 })
 
 
-userSchema.static("matchedUserAndGenerateToken",async function (contactNumber , password){
-    const user = await this.findOne({contactNumber}).lean();      //it convert mongoose object to simple js object
+userSchema.static("matchedUserAndGenerateToken",async function (email , password){
+    const user = await this.findOne({email}).lean();      //it convert mongoose object to simple js object
     console.log(user);
     if(!user) 
     {
-        return {token : null , msg : "Mobile Number Incorrect"}
+        return { error : "User Not Found!!"}
     }
+
+    if(user.googleId)
+    {
+        const token = createTokenForUser(user);
+        return {token : token , msg : "Sign In Succeeded", role : user.role};
+    }
+
 
     const salt = user.salt;
     const hashedPassword = user.password;
@@ -64,7 +68,7 @@ userSchema.static("matchedUserAndGenerateToken",async function (contactNumber , 
     
     if(UserProvidedHashedPassword != hashedPassword)
     {
-        return {token : null , msg : "Password Incorrect"};
+        return {error : "Password Incorrect"};
     }
 
     const token = createTokenForUser(user);

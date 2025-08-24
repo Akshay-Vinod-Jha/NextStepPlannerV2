@@ -16,7 +16,7 @@ const storage = new CloudinaryStorage({
     cloudinary : cloudinary,
     params : {
         folder : "nisargpath",
-        allowed_formats: ['png', 'jpg', 'jpeg'],
+        allowed_formats: ['png', 'jpg', 'jpeg', 'webp'],
     },
 });
 

@@ -37,7 +37,7 @@ const services = [
 const Services = () => {
   const navigate = useNavigate();
   return (
-    <section id="services" className="py-20 bg-white">
+    <section id="services" className="py-20 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
@@ -52,7 +52,7 @@ const Services = () => {
           {services.map((service, index) => (
             <div 
               key={index}
-              className="bg-gradient-to-br from-gray-50 to-gray-100 p-8 rounded-2xl hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 group"
+              className="bg-orange-100 p-8 rounded-2xl hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 group"
             >
               <div className="text-orange-600 mb-4 group-hover:scale-110 transition-transform duration-300">
                 {service.icon}

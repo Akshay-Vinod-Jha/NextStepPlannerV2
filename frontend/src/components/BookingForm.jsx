@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState } from 'react';
 import { 
   MapPin, ArrowLeft,
-  AlertCircle
+  AlertCircle, Phone
 } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -15,6 +15,7 @@ const BookingForm = () => {
   const [formData, setFormData] = useState({
     selectedDate: '',
     numPersons: 1,
+    mobileNumber: '',
     acceptTerms: false,
     destinationId : destination._id,
     orderId: null,
@@ -24,30 +25,37 @@ const BookingForm = () => {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // This would come from your state management or route params
-//   const destination = {
-//     name: "Roopkund Trek",
-//     location: "Uttarakhand, India",
-//     price: 14999,
-//     dates: [
-//       { start: "2024-05-01", end: "2024-05-07" },
-//       { start: "2024-05-15", end: "2024-05-21" },
-//       { start: "2024-06-01", end: "2024-06-07" }
-//     ]
-//   };
-
-  
-
   const totalPrice = destination.price * formData.numPersons;
+
+  // Mobile number validation for Indian numbers
+  const validateMobileNumber = (mobile) => {
+    // Remove any spaces, dashes, or other non-digit characters except +
+    const cleanMobile = mobile.replace(/[^\d+]/g, '');
+    
+    // Indian mobile number patterns:
+    // 10 digits starting with 6, 7, 8, or 9
+    // Or with +91 prefix
+    const indianMobileRegex = /^(?:\+91)?[6-9]\d{9}$/;
+    
+    return indianMobileRegex.test(cleanMobile);
+  };
 
   const validateForm = () => {
     const newErrors = {};
+    
     if (!formData.selectedDate) newErrors.selectedDate = 'Please select a date';
+    
+    if (!formData.mobileNumber.trim()) {
+      newErrors.mobileNumber = 'Mobile number is required';
+    } else if (!validateMobileNumber(formData.mobileNumber)) {
+      newErrors.mobileNumber = 'Please enter a valid Indian mobile number';
+    }
+    
     if (!formData.acceptTerms) newErrors.acceptTerms = 'Please accept terms and conditions';
+    
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
 
 const handleSubmit = async (e) => {
   e.preventDefault();
@@ -58,9 +66,14 @@ const handleSubmit = async (e) => {
 
   try {
     const [startDateStr, endDateStr] = formData.selectedDate.split("-");
+    
+    // Clean mobile number for backend (remove spaces, keep only digits and +)
+    const cleanMobileNumber = formData.mobileNumber.replace(/[^\d+]/g, '');
+    
     const bookingData = {
       destinationId: formData.destinationId,
       numPersons: formData.numPersons,
+      mobileNumber: cleanMobileNumber,
       dateSlot: {
         startDate: new Date(startDateStr),
         endDate: new Date(endDateStr)
@@ -70,9 +83,7 @@ const handleSubmit = async (e) => {
       paymentId: formData.paymentId
     };
 
-    // const token = localStorage.getItem("token"); // or get from cookies
-
-    const response = await axios.post("http://localhost:5001/booking", bookingData,
+    const response = await axios.post(`http://localhost:5001/booking/booktrek/${formData.destinationId}`, bookingData,
         {
             withCredentials: true,
         } ,{
@@ -81,9 +92,13 @@ const handleSubmit = async (e) => {
       }
     });
 
-    console.log("Booking success:", response.data);
-    toast.success("Booking successful!");
-    navigate(-1);
+    if(response.status === 200)
+    {
+      console.log("Booking success:", response.data);
+      toast.success("Booking successful!");
+      navigate(-1);
+    }
+    
   } catch (error) {
     console.error("Booking failed:", error.response?.data || error.message);
     toast.error("Booking failed. Try again.");
@@ -94,10 +109,34 @@ const handleSubmit = async (e) => {
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
+    
+    let processedValue = value;
+    
+    // Format mobile number as user types (add spaces for readability)
+    if (name === 'mobileNumber') {
+      // Remove all non-digit characters except +
+      let cleaned = value.replace(/[^\d+]/g, '');
+      
+      // Format for display (add spaces)
+      if (cleaned.startsWith('+91')) {
+        cleaned = cleaned.substring(3);
+        if (cleaned.length > 0) {
+          processedValue = '+91 ' + cleaned.replace(/(\d{5})(\d{0,5})/, '$1 $2').trim();
+        } else {
+          processedValue = '+91 ';
+        }
+      } else if (cleaned.length > 0) {
+        processedValue = cleaned.replace(/(\d{5})(\d{0,5})/, '$1 $2').trim();
+      } else {
+        processedValue = '';
+      }
+    }
+    
     setFormData(prev => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === 'checkbox' ? checked : processedValue
     }));
+    
     // Clear error when user starts typing
     if (errors[name]) {
       setErrors(prev => ({
@@ -120,9 +159,6 @@ const handleSubmit = async (e) => {
       <div className="max-w-2xl mx-auto px-4 pb-8">
     
         <div className="flex items-start space-x-6">
-          {/* Back Button - Left side of form card */}
-          
-
           <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 border-2 border-orange-200 flex-1">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Book Your Trek</h2>
             
@@ -192,6 +228,37 @@ const handleSubmit = async (e) => {
                     +
                   </button>
                 </div>
+              </div>
+
+              {/* Mobile Number */}
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Mobile Number
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Phone className="h-5 w-5 text-orange-600" />
+                  </div>
+                  <input
+                    type="tel"
+                    name="mobileNumber"
+                    value={formData.mobileNumber}
+                    onChange={handleInputChange}
+                    placeholder="Enter your mobile number"
+                    className={`w-full pl-10 pr-3 py-3 rounded-lg border ${
+                      errors.mobileNumber ? 'border-red-500' : 'border-orange-200'
+                    } focus:ring-2 focus:ring-orange-600 focus:border-transparent bg-white shadow-sm`}
+                  />
+                </div>
+                <p className="mt-1 text-xs text-gray-500">
+                  Enter 10-digit Indian mobile number (with or without +91)
+                </p>
+                {errors.mobileNumber && (
+                  <p className="mt-1 text-sm text-red-500 flex items-center">
+                    <AlertCircle className="h-4 w-4 mr-1" />
+                    {errors.mobileNumber}
+                  </p>
+                )}
               </div>
 
               {/* Price Summary */}
