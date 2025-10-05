@@ -31,6 +31,8 @@ const AdminBookings = () => {
     const fetchBookings = async () => {
       if (!destination) return;
       
+      console.log("Fetching bookings for destination:", destination._id);
+      
       try {
         setLoading(true);
         const response = await axios.get(
@@ -38,12 +40,17 @@ const AdminBookings = () => {
           { withCredentials: true }
         );
         
+        console.log("Bookings response:", response.data);
+        
         if (response.data?.data) {
           setBookings(response.data.data);
+          console.log(`Loaded ${response.data.data.length} bookings`);
         }
       } catch (error) {
         console.error("Error fetching bookings:", error);
-        toast.error("Failed to fetch bookings!");
+        console.error("Error response:", error.response?.data);
+        console.error("Full error response:", error.response);
+        toast.error(error.response?.data?.error || "Failed to fetch bookings!");
       } finally {
         setLoading(false);
       }
@@ -100,9 +107,7 @@ const AdminBookings = () => {
       const statusColors = {
         confirmed: 'bg-green-100 text-green-800',
         pending: 'bg-yellow-100 text-yellow-800',
-        cancelled: 'bg-red-100 text-red-800',
-        booked: 'bg-blue-100 text-blue-800',
-        upcoming: 'bg-purple-100 text-purple-800'
+        cancelled: 'bg-red-100 text-red-800'
       };
       return `${baseClasses} ${statusColors[status] || 'bg-gray-100 text-gray-800'}`;
     } else {
@@ -199,8 +204,6 @@ const AdminBookings = () => {
                 <option value="pending">Pending</option>
                 <option value="confirmed">Confirmed</option>
                 <option value="cancelled">Cancelled</option>
-                <option value="booked">Booked</option>
-                <option value="upcoming">Upcoming</option>
               </select>
 
               <select
@@ -397,7 +400,7 @@ const AdminBookings = () => {
                   <div>
                     <label className="block text-sm text-gray-500 mb-2">Booking Status</label>
                     <div className="space-y-2">
-                      {['pending', 'confirmed', 'booked', 'upcoming', 'cancelled'].map((status) => (
+                      {['pending', 'confirmed', 'cancelled'].map((status) => (
                         <button
                           key={status}
                           onClick={() => handleUpdateStatus(selectedBooking._id, status, selectedBooking.paymentStatus)}

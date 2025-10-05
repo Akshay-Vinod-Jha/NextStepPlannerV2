@@ -13,7 +13,8 @@ export const AdminCard = ({destination}) => {
   };
   
   const handleViewBookings = () => {
-    console.log('Navigate to view bookings:', destination._id);
+    console.log('Navigate to view bookings for destination:', destination);
+    console.log('Destination ID:', destination._id);
     navigate("/admin/bookings", { state: { destination } });
   };
   

@@ -29,11 +29,11 @@ const AdminPanel = () => {
   return (
     <div className="min-h-screen bg-gray-50">      {/* Header with Back Button and Title */}      <div className='flex flex-col sm:flex-row sm:items-center justify-between px-4 sm:px-10 py-4 border-b border-gray-200 bg-orange-50'>
         <button 
-          onClick={() => navigate(-1)}
+          onClick={() => navigate('/')}
           className="flex items-center text-white px-4 py-2 rounded-lg border bg-orange-600 transition-all duration-300 hover:shadow-md mb-4 sm:mb-0"
         >
           <ArrowLeft className="h-5 w-5 mr-2" />
-          <span className="font-medium">Back</span>
+          <span className="font-medium">Back to Home</span>
         </button>
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 text-center">Admin Dashboard</h1>
         <div className="hidden sm:block w-24"></div> {/* Spacer for center alignment on larger screens */}

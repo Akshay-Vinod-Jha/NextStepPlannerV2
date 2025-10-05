@@ -126,11 +126,22 @@ export async function getDestinationBookings(req, res) {
       return res.status(400).json({ error: "Destination ID is required!" });
     }
 
+    console.log("Fetching bookings for destination:", destinationId);
+
     // Fetch all bookings for this destination and populate user details
     const bookings = await Booking.find({ destinationId })
-      .populate('userId', 'name email')
-      .populate('destinationId', 'name location')
-      .sort({ createdAt: -1 });
+      .populate({
+        path: 'userId',
+        select: 'name email',
+        options: { strictPopulate: false }
+      })
+      .populate({
+        path: 'destinationId',
+        select: 'name location',
+        options: { strictPopulate: false }
+      })
+      .sort({ createdAt: -1 })
+      .lean();
 
     console.log(`Found ${bookings.length} bookings for destination ${destinationId}`);
 
@@ -141,7 +152,9 @@ export async function getDestinationBookings(req, res) {
 
   } catch (err) {
     console.error("Error fetching bookings:", err);
-    return res.status(500).json({ error: "Server error while fetching bookings." });
+    console.error("Error details:", err.message);
+    console.error("Stack trace:", err.stack);
+    return res.status(500).json({ error: "Server error while fetching bookings.", details: err.message });
   }
 }
 

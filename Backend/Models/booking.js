@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 const bookingSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'user',
     required: true
   },
   destinationId: {
@@ -14,8 +14,9 @@ const bookingSchema = new mongoose.Schema({
   },
   bookingId: {
     type: String,
-    required: true,
-    unique: true
+    required: false,
+    unique: true,
+    sparse: true  // Allows multiple null values
   },
   dateSlot: {
     startDate: {
@@ -33,7 +34,7 @@ const bookingSchema = new mongoose.Schema({
   },
   bookingStatus: {
     type: String,
-    enum: ['confirmed', 'cancelled', 'pending', 'booked','upcoming'],
+    enum: [ 'pending','confirmed', 'cancelled',],
     default : 'pending'
   },
   paymentStatus: {
