@@ -76,8 +76,21 @@ export const AdminCard = ({destination}) => {
           <img 
             src={sampleDestination.images[0].url} 
             alt={sampleDestination.name}
-            className="w-full h-64 object-cover transition-transform duration-300 hover:scale-110"
+            className={`w-full h-64 object-cover transition-transform duration-300 hover:scale-110 ${sampleDestination.status === 'unavailable' ? 'grayscale-[30%]' : ''}`}
           />
+          
+          {/* Status Badge - Bottom Left */}
+          <div className="absolute bottom-4 left-4">
+            <div className={`px-3 py-1 rounded-full flex items-center space-x-1 font-semibold text-xs uppercase backdrop-blur-sm ${
+              sampleDestination.status === 'available' 
+                ? 'bg-green-500/90 text-white' 
+                : 'bg-red-500/90 text-white'
+            }`}>
+              <span>{sampleDestination.status === 'available' ? 'Available' : 'Unavailable'}</span>
+            </div>
+          </div>
+          
+          {/* Price Badge - Top Right */}
           <div className="absolute top-4 right-4">
             <div className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full flex items-center space-x-1">
               <IndianRupee className="h-4 w-4 text-orange-600" />

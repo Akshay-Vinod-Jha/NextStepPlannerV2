@@ -26,6 +26,7 @@ export async function updateDestinationsHandler(req, res) {
       price,
       transportMode,
       oldImages,
+      status
     } = req.body;
 
     // Basic validation
@@ -77,6 +78,7 @@ export async function updateDestinationsHandler(req, res) {
         transportMode,
         dates,
         images: allImages,
+        status
       },
       { new: true } // Return the updated document
     );
@@ -112,7 +114,8 @@ export async function addDestinationHandler(req, res) {
       description,
       duration,
       price,
-      transportMode
+      transportMode,
+      status
     } = req.body;
 
     if (!name || !location) {
@@ -143,8 +146,10 @@ export async function addDestinationHandler(req, res) {
       duration,
       price: parseFloat(price),
       transportMode,
+      status: status || 'available',
       dates,
-      images
+      images,
+      status
     });
 
     console.log("Destination created:", newDestination);

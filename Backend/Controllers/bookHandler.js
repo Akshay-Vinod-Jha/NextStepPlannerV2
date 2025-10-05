@@ -1,4 +1,5 @@
 import Booking from "../Models/booking.js";
+import Destination from "../Models/destination.js";
 import { v4 as uuidv4 } from 'uuid';
 
 // Generate 10-digit numeric booking ID like "NP-1234567890"
@@ -29,6 +30,17 @@ export async function handleTreckBooking(req, res) {
 
     const userId = req.user.userId;
     const destinationId = req.params.destinationId;
+
+    // Check if destination exists and is available
+    const destination = await Destination.findById(destinationId);
+    
+    if (!destination) {
+      return res.status(404).json({ error: "Destination not found!" });
+    }
+
+    if (destination.status === 'unavailable') {
+      return res.status(403).json({ error: "This trek is currently unavailable for booking!" });
+    }
 
     const {
       numPersons,

@@ -16,7 +16,8 @@ const AdminTrekForm = () => {
     dates: [{ id: '1', startDate: '', endDate: '' }],
     duration: '',
     price: '',
-    transportMode: ''
+    transportMode: '',
+    status: 'available'
   });
 
   const [dragActive, setDragActive] = useState(false);
@@ -99,6 +100,7 @@ const AdminTrekForm = () => {
   data.append("duration", formData.duration);
   data.append("price", formData.price);
   data.append("transportMode", formData.transportMode);
+  data.append("status", formData.status);
 
   // Append all images
   formData.images.forEach((image) => {
@@ -374,6 +376,27 @@ return (
                   <option value="self-drive">Self Drive</option>
                   <option value="multiple">Multiple Modes</option>
                 </select>
+              </div>
+
+              {/* Trek Status */}
+              <div>
+                <label className="flex items-center text-lg font-semibold text-gray-900 mb-3">
+                  <Mountain className="h-5 w-5 text-orange-600 mr-2" />
+                  Trek Status *
+                </label>
+                <select
+                  name="status"
+                  required
+                  value={formData.status}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-orange-600 focus:ring-2 focus:ring-orange-200 transition-all duration-300"
+                >
+                  <option value="available">Available for Booking</option>
+                  <option value="unavailable">Unavailable</option>
+                </select>
+                <p className="mt-2 text-sm text-gray-500">
+                  Set to "Unavailable" to prevent bookings while keeping the trek visible
+                </p>
               </div>
             </div>
 
