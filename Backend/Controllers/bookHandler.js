@@ -44,16 +44,35 @@ export async function handleTreckBooking(req, res) {
 
     const {
       numPersons,
-      dateSlot,
+      startDate,
+      endDate,
       orderId,
       paymentId,
       mobileNumber,
       amountPaid
     } = req.body;
 
-    if (!userId || !destinationId || !numPersons || !dateSlot || !dateSlot.startDate || !dateSlot.endDate || !amountPaid || !mobileNumber) {
+    // Handle payment screenshot from file upload
+    let paymentScreenshot = null;
+    if (req.file) {
+      paymentScreenshot = {
+        url: req.file.path,
+        filename: req.file.filename
+      };
+    }
+
+    if (!userId || !destinationId || !numPersons || !startDate || !endDate || !amountPaid || !mobileNumber) {
       return res.status(400).json({ error: "Invalid or missing input fields!" });
     }
+
+    if (!paymentScreenshot) {
+      return res.status(400).json({ error: "Payment screenshot is required!" });
+    }
+
+    const dateSlot = {
+      startDate: new Date(startDate),
+      endDate: new Date(endDate)
+    };
 
     const bookingId = generateNumericBookingId();
 
@@ -77,8 +96,9 @@ export async function handleTreckBooking(req, res) {
       paymentId,
       amountPaid,
       mobileNumber,
-      paymentStatus : 'paid',
-      bookingStatus : 'upcoming',
+      paymentScreenshot,
+      paymentStatus : 'pending',
+      bookingStatus : 'pending',
     });
 
     console.log("New booking created:", newBooking);

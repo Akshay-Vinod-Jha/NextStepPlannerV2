@@ -53,6 +53,10 @@ const bookingSchema = new mongoose.Schema({
   mobileNumber : {
     type : Number,
     required : true,
+  },
+  paymentScreenshot: {
+    url: String,
+    filename: String
   }
 }, { timestamps: true });
 

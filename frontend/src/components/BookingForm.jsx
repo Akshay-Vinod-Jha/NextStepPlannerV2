@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState } from 'react';
 import { 
   MapPin, ArrowLeft,
-  AlertCircle, Phone
+  AlertCircle, Phone, Upload, Image, CheckCircle, X
 } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -20,10 +20,13 @@ const BookingForm = () => {
     destinationId : destination._id,
     orderId: null,
     paymentId: null,
+    paymentScreenshot: null,
   });
 
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showThankYou, setShowThankYou] = useState(false);
+  const [previewImage, setPreviewImage] = useState(null);
 
   const totalPrice = destination.price * formData.numPersons;
 
@@ -51,10 +54,36 @@ const BookingForm = () => {
       newErrors.mobileNumber = 'Please enter a valid Indian mobile number';
     }
     
+    if (!formData.paymentScreenshot) newErrors.paymentScreenshot = 'Please upload payment screenshot';
+    
     if (!formData.acceptTerms) newErrors.acceptTerms = 'Please accept terms and conditions';
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
+  };
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) { // 5MB limit
+        setErrors(prev => ({ ...prev, paymentScreenshot: 'File size should be less than 5MB' }));
+        return;
+      }
+      
+      if (!file.type.startsWith('image/')) {
+        setErrors(prev => ({ ...prev, paymentScreenshot: 'Please upload an image file' }));
+        return;
+      }
+      
+      setFormData(prev => ({ ...prev, paymentScreenshot: file }));
+      setPreviewImage(URL.createObjectURL(file));
+      setErrors(prev => ({ ...prev, paymentScreenshot: '' }));
+    }
+  };
+
+  const removeImage = () => {
+    setFormData(prev => ({ ...prev, paymentScreenshot: null }));
+    setPreviewImage(null);
   };
 
 const handleSubmit = async (e) => {
@@ -70,33 +99,31 @@ const handleSubmit = async (e) => {
     // Clean mobile number for backend (remove spaces, keep only digits and +)
     const cleanMobileNumber = formData.mobileNumber.replace(/[^\d+]/g, '');
     
-    const bookingData = {
-      destinationId: formData.destinationId,
-      numPersons: formData.numPersons,
-      mobileNumber: cleanMobileNumber,
-      dateSlot: {
-        startDate: new Date(startDateStr),
-        endDate: new Date(endDateStr)
-      },
-      amountPaid: destination.price * formData.numPersons,
-      orderId: formData.orderId, // These will be set after Razorpay
-      paymentId: formData.paymentId
-    };
+    // Create FormData for file upload
+    const formDataToSend = new FormData();
+    formDataToSend.append('destinationId', formData.destinationId);
+    formDataToSend.append('numPersons', formData.numPersons);
+    formDataToSend.append('mobileNumber', cleanMobileNumber);
+    formDataToSend.append('startDate', new Date(startDateStr).toISOString());
+    formDataToSend.append('endDate', new Date(endDateStr).toISOString());
+    formDataToSend.append('amountPaid', destination.price * formData.numPersons);
+    formDataToSend.append('paymentScreenshot', formData.paymentScreenshot);
 
-    const response = await axios.post(`http://localhost:5001/booking/booktrek/${formData.destinationId}`, bookingData,
-        {
-            withCredentials: true,
-        } ,{
-      headers: {
-        "Content-Type": "application/json"
+    const response = await axios.post(
+      `http://localhost:5001/booking/booktrek/${formData.destinationId}`, 
+      formDataToSend,
+      {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
       }
-    });
+    );
 
     if(response.status === 200)
     {
       console.log("Booking success:", response.data);
-      toast.success("Booking successful!");
-      navigate(-1);
+      setShowThankYou(true);
     }
     
   } catch (error) {
@@ -273,11 +300,69 @@ const handleSubmit = async (e) => {
                 </div>
                 <div className="border-t border-orange-200 my-3"></div>
                 <div className="flex justify-between items-center">
-                  <span className="text-lg font-semibold text-gray-900">Total Price</span>
+                  <span className="text-lg font-semibold text-gray-900">Total Amount to Pay</span>
                   <span className="text-2xl font-bold text-orange-600">
                     ₹{totalPrice.toLocaleString()}
                   </span>
                 </div>
+              </div>
+
+              {/* Payment Screenshot Upload */}
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Upload Payment Screenshot *
+                </label>
+                <p className="text-xs text-gray-500 mb-3">
+                  Please make payment of ₹{totalPrice.toLocaleString()} and upload the screenshot below
+                </p>
+                
+                {!previewImage ? (
+                  <label className={`flex flex-col items-center justify-center w-full h-40 border-2 border-dashed rounded-xl cursor-pointer transition-all duration-300 ${
+                    errors.paymentScreenshot 
+                      ? 'border-red-500 bg-red-50 hover:bg-red-100' 
+                      : 'border-orange-300 bg-orange-50 hover:bg-orange-100'
+                  }`}>
+                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                      <Upload className={`h-10 w-10 mb-3 ${errors.paymentScreenshot ? 'text-red-500' : 'text-orange-600'}`} />
+                      <p className="mb-2 text-sm text-gray-600">
+                        <span className="font-semibold">Click to upload</span> or drag and drop
+                      </p>
+                      <p className="text-xs text-gray-500">PNG, JPG or JPEG (MAX. 5MB)</p>
+                    </div>
+                    <input 
+                      type="file" 
+                      className="hidden" 
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                    />
+                  </label>
+                ) : (
+                  <div className="relative">
+                    <img 
+                      src={previewImage} 
+                      alt="Payment Screenshot" 
+                      className="w-full h-48 object-contain rounded-xl border-2 border-orange-200 bg-gray-50"
+                    />
+                    <button
+                      type="button"
+                      onClick={removeImage}
+                      className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white p-2 rounded-full transition-colors duration-300"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                    <div className="mt-2 flex items-center text-green-600 text-sm">
+                      <CheckCircle className="h-4 w-4 mr-1" />
+                      <span>Screenshot uploaded successfully</span>
+                    </div>
+                  </div>
+                )}
+                
+                {errors.paymentScreenshot && (
+                  <p className="mt-2 text-sm text-red-500 flex items-center">
+                    <AlertCircle className="h-4 w-4 mr-1" />
+                    {errors.paymentScreenshot}
+                  </p>
+                )}
               </div>
 
               {/* Terms and Conditions */}
@@ -322,12 +407,65 @@ const handleSubmit = async (e) => {
                     : 'bg-gradient-to-r from-orange-600 to-red-600 text-white hover:shadow-xl hover:from-orange-700 hover:to-red-700'
                 }`}
               >
-                {isSubmitting ? 'Processing...' : 'Proceed to Payment'}
+                {isSubmitting ? 'Submitting...' : 'Submit Booking'}
               </button>
             </form>
           </div>
         </div>
       </div>
+
+      {/* Thank You Modal */}
+      {showThankYou && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 transform transition-all duration-300 animate-in">
+            {/* Success Icon */}
+            <div className="flex justify-center mb-6">
+              <div className="bg-green-100 rounded-full p-4">
+                <CheckCircle className="h-16 w-16 text-green-600" />
+              </div>
+            </div>
+
+            {/* Thank You Message */}
+            <div className="text-center mb-6">
+              <h2 className="text-3xl font-bold text-gray-900 mb-3">
+                Thank You for Booking!
+              </h2>
+              <p className="text-gray-600 mb-4">
+                Your booking has been submitted successfully. We'll verify your payment and confirm shortly.
+              </p>
+              <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-4">
+                <p className="text-sm font-semibold text-orange-800 mb-2">
+                  📱 Join Our WhatsApp Group
+                </p>
+                <p className="text-xs text-gray-600 mb-3">
+                  Stay updated with trek details, meet fellow trekkers, and get important announcements
+                </p>
+              </div>
+            </div>
+
+            {/* WhatsApp Group Button */}
+            <a
+              href="https://chat.whatsapp.com/your-group-link"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-semibold text-center transition-colors duration-300 mb-3"
+            >
+              Join WhatsApp Group
+            </a>
+
+            {/* Continue Button */}
+            <button
+              onClick={() => {
+                setShowThankYou(false);
+                navigate('/destinations');
+              }}
+              className="w-full bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white py-3 rounded-lg font-semibold transition-all duration-300"
+            >
+              Browse More Treks
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
