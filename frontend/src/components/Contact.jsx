@@ -59,7 +59,7 @@ const Contact = () => {
                 </div>
                 <div>
                   <h4 className="font-semibold text-gray-900">Email</h4>
-                  <p className="text-gray-600">info@nisargpath.com</p>
+                  <p className="text-gray-600">info@trekora.com</p>
                 </div>
               </div>
 
@@ -75,7 +75,7 @@ const Contact = () => {
             </div>
 
             <div className="mt-8 p-6 bg-gradient-to-r from-orange-600 to-red-600 rounded-2xl text-white">
-              <h4 className="text-xl font-bold mb-2">Why Choose NisargPath?</h4>
+              <h4 className="text-xl font-bold mb-2">Why Choose Trekora?</h4>
               <ul className="space-y-2 text-sm">
                 <li>• 15+ years of trekking experience</li>
                 <li>• Certified mountain guides</li>

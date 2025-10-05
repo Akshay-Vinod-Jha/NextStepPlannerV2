@@ -435,17 +435,16 @@ const handleSubmit = async (e) => {
               </p>
               <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-4">
                 <p className="text-sm font-semibold text-orange-800 mb-2">
-                  📱 Join Our WhatsApp Group
+                  📱 Join the WhatsApp Group for further updates regarding the Trek
                 </p>
-                <p className="text-xs text-gray-600 mb-3">
-                  Stay updated with trek details, meet fellow trekkers, and get important announcements
-                </p>
+                <p>https://chat.whatsapp.com/new-grp</p>
+                
               </div>
             </div>
 
             {/* WhatsApp Group Button */}
             <a
-              href="https://chat.whatsapp.com/your-group-link"
+              href="https://chat.whatsapp.com/new-grp"
               target="_blank"
               rel="noopener noreferrer"
               className="block w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-semibold text-center transition-colors duration-300 mb-3"

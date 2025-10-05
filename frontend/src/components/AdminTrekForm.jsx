@@ -142,7 +142,7 @@ return (
               <Mountain className="h-8 w-8 text-white" />
               <div>
                 <h1 className="text-3xl font-bold text-white">Add New Trek</h1>
-                <p className="text-orange-100">Upload trekking details for NisargPath</p>
+                <p className="text-orange-100">Upload trekking details for Trekora</p>
               </div>
             </div>
           </div>

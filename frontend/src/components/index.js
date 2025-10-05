@@ -17,6 +17,6 @@ import AdminPanel from "./AdminPanel";
 import EditTrekForm from "./EditTrekForm";
 import { checkUserAuthLoader,checkAdminAuthLoader } from "./checkAuthLoader";
 import Unauthorized from "./Unauthorized";
-import AdminTreckBookings from "./AdminTreckBookings";
+import AdminBookings from "./AdminBookings";
 
-export { Header, Hero, Card, Footer, Destinations,Contact, Gallery, AllDestinations, Services, Testimonials, AdminTrekForm, EditTrekForm, SignInForm, SignUpForm , DestinationDetails , BookingForm, AdminPanel,checkAdminAuthLoader,checkUserAuthLoader,Unauthorized, AdminTreckBookings};
+export { Header, Hero, Card, Footer, Destinations,Contact, Gallery, AllDestinations, Services, Testimonials, AdminTrekForm, EditTrekForm, SignInForm, SignUpForm , DestinationDetails , BookingForm, AdminPanel,checkAdminAuthLoader,checkUserAuthLoader,Unauthorized, AdminBookings};

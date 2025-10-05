@@ -1,14 +1,14 @@
-# 🏞️ NisargPath - Your Journey, Uncharted
+# 🏞️ Trekora - Your Journey, Uncharted
 
 ## _Discover, Book, and Experience the Wild_
 
 ## ✨ Project Overview
 
-**NisargPath** is a full-stack web platform meticulously designed to simplify the process of discovering and booking adventurous treks. It provides a seamless and intuitive experience for users to explore curated trek details and manage their bookings, while empowering administrators with comprehensive tools to organize, publish, and oversee all trek operations. From solo adventurers to group explorers, NisargPath connects enthusiasts with their next unforgettable outdoor experience.
+**Trekora** is a full-stack web platform meticulously designed to simplify the process of discovering and booking adventurous treks. It provides a seamless and intuitive experience for users to explore curated trek details and manage their bookings, while empowering administrators with comprehensive tools to organize, publish, and oversee all trek operations. From solo adventurers to group explorers, Trekora connects enthusiasts with their next unforgettable outdoor experience.
 
-## 💡 How NisargPath Works & Its Core Functionality
+## 💡 How Trekora Works & Its Core Functionality
 
-NisargPath provides a streamlined workflow for both trekkers and administrators:
+Trekora provides a streamlined workflow for both trekkers and administrators:
 
 ### For Trekkers (Users):
 1.  **Discover Treks:** Browse through a curated list of upcoming treks with detailed descriptions, itineraries, and essential information.
