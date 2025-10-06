@@ -13,7 +13,6 @@ const AdminBookings = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [bookingStatusFilter, setBookingStatusFilter] = useState('All');
-  const [paymentStatusFilter, setPaymentStatusFilter] = useState('All');
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [showImageModal, setShowImageModal] = useState(false);
@@ -63,25 +62,26 @@ const AdminBookings = () => {
   const filteredBookings = bookings.filter(booking => {
     const userName = booking.userId?.name || '';
     const userEmail = booking.userId?.email || '';
+    const bookingIdStr = booking.bookingId || '';
+    const mobileStr = booking.mobileNumber?.toString() || '';
     
     const matchesSearch = 
       userName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       userEmail.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      booking.mobileNumber?.toString().includes(searchTerm) ||
-      booking.bookingId.toLowerCase().includes(searchTerm.toLowerCase());
+      mobileStr.includes(searchTerm) ||
+      bookingIdStr.toLowerCase().includes(searchTerm.toLowerCase());
     
     const matchesBookingStatus = bookingStatusFilter === 'All' || booking.bookingStatus === bookingStatusFilter;
-    const matchesPaymentStatus = paymentStatusFilter === 'All' || booking.paymentStatus === paymentStatusFilter;
     
-    return matchesSearch && matchesBookingStatus && matchesPaymentStatus;
+    return matchesSearch && matchesBookingStatus;
   });
 
   // Update booking status
-  const handleUpdateStatus = async (bookingId, bookingStatus, paymentStatus) => {
+  const handleUpdateStatus = async (bookingId, bookingStatus) => {
     try {
       const response = await axios.patch(
         `http://localhost:5001/booking/update/${bookingId}`,
-        { bookingStatus, paymentStatus },
+        { bookingStatus },
         { withCredentials: true }
       );
 
@@ -100,24 +100,14 @@ const AdminBookings = () => {
     }
   };
 
-  const getStatusBadge = (status, type = 'booking') => {
+  const getStatusBadge = (status) => {
     const baseClasses = "px-3 py-1 rounded-full text-xs font-semibold uppercase";
-    
-    if (type === 'booking') {
-      const statusColors = {
-        confirmed: 'bg-green-100 text-green-800',
-        pending: 'bg-yellow-100 text-yellow-800',
-        cancelled: 'bg-red-100 text-red-800'
-      };
-      return `${baseClasses} ${statusColors[status] || 'bg-gray-100 text-gray-800'}`;
-    } else {
-      const statusColors = {
-        paid: 'bg-green-100 text-green-800',
-        pending: 'bg-yellow-100 text-yellow-800',
-        cancelled: 'bg-red-100 text-red-800'
-      };
-      return `${baseClasses} ${statusColors[status] || 'bg-gray-100 text-gray-800'}`;
-    }
+    const statusColors = {
+      confirmed: 'bg-green-100 text-green-800',
+      pending: 'bg-yellow-100 text-yellow-800',
+      cancelled: 'bg-red-100 text-red-800'
+    };
+    return `${baseClasses} ${statusColors[status] || 'bg-gray-100 text-gray-800'}`;
   };
 
   const formatDate = (dateString) => {
@@ -200,20 +190,9 @@ const AdminBookings = () => {
                 value={bookingStatusFilter}
                 onChange={(e) => setBookingStatusFilter(e.target.value)}
               >
-                <option value="All">All Booking Status</option>
+                <option value="All">All Status</option>
                 <option value="pending">Pending</option>
                 <option value="confirmed">Confirmed</option>
-                <option value="cancelled">Cancelled</option>
-              </select>
-
-              <select
-                className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 outline-none"
-                value={paymentStatusFilter}
-                onChange={(e) => setPaymentStatusFilter(e.target.value)}
-              >
-                <option value="All">All Payment Status</option>
-                <option value="pending">Pending</option>
-                <option value="paid">Paid</option>
                 <option value="cancelled">Cancelled</option>
               </select>
             </div>
@@ -261,16 +240,9 @@ const AdminBookings = () => {
                       </span>
                     </td>
                     <td className="py-4 px-4">
-                      <div className="space-y-1">
-                        <span className={getStatusBadge(booking.bookingStatus, 'booking')}>
-                          {booking.bookingStatus}
-                        </span>
-                        <div className="xl:hidden">
-                          <span className={getStatusBadge(booking.paymentStatus, 'payment')}>
-                            {booking.paymentStatus}
-                          </span>
-                        </div>
-                      </div>
+                      <span className={getStatusBadge(booking.bookingStatus)}>
+                        {booking.bookingStatus}
+                      </span>
                     </td>
                     <td className="py-4 px-4 text-center">
                       <button
@@ -297,7 +269,7 @@ const AdminBookings = () => {
             <Search className="w-12 h-12 mx-auto text-gray-400 mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">No bookings found</h3>
             <p className="text-gray-500">
-              {searchTerm || bookingStatusFilter !== 'All' || paymentStatusFilter !== 'All'
+              {searchTerm || bookingStatusFilter !== 'All'
                 ? 'Try adjusting your filters.'
                 : 'No bookings yet for this trek.'}
             </p>
@@ -395,45 +367,25 @@ const AdminBookings = () => {
 
               {/* Status Update */}
               <div className="border-t pt-4">
-                <h4 className="font-semibold text-gray-900 mb-3">Update Status</h4>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm text-gray-500 mb-2">Booking Status</label>
-                    <div className="space-y-2">
-                      {['pending', 'confirmed', 'cancelled'].map((status) => (
-                        <button
-                          key={status}
-                          onClick={() => handleUpdateStatus(selectedBooking._id, status, selectedBooking.paymentStatus)}
-                          className={`w-full px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
-                            selectedBooking.bookingStatus === status
-                              ? 'bg-orange-600 text-white'
-                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                          }`}
-                        >
-                          {status.charAt(0).toUpperCase() + status.slice(1)}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                  <div>
-                    <label className="block text-sm text-gray-500 mb-2">Payment Status</label>
-                    <div className="space-y-2">
-                      {['pending', 'paid', 'cancelled'].map((status) => (
-                        <button
-                          key={status}
-                          onClick={() => handleUpdateStatus(selectedBooking._id, selectedBooking.bookingStatus, status)}
-                          className={`w-full px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
-                            selectedBooking.paymentStatus === status
-                              ? 'bg-green-600 text-white'
-                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                          }`}
-                        >
-                          {status.charAt(0).toUpperCase() + status.slice(1)}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
+                <h4 className="font-semibold text-gray-900 mb-3">Update Booking Status</h4>
+                <div className="space-y-2">
+                  {['pending', 'confirmed', 'cancelled'].map((status) => (
+                    <button
+                      key={status}
+                      onClick={() => handleUpdateStatus(selectedBooking._id, status)}
+                      className={`w-full px-4 py-3 rounded-lg font-medium text-sm transition-colors ${
+                        selectedBooking.bookingStatus === status
+                          ? 'bg-orange-600 text-white'
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
+                    >
+                      {status.charAt(0).toUpperCase() + status.slice(1)}
+                    </button>
+                  ))}
                 </div>
+                <p className="text-xs text-gray-500 mt-3">
+                  Note: Confirming a booking means payment has been verified and accepted.
+                </p>
               </div>
             </div>
           </div>

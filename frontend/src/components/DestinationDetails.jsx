@@ -352,7 +352,10 @@ const handleNavigateBookingForm = async () => {
                 <h2 className="text-xl font-bold mb-1">Need Help?</h2>
                 <p className="text-sm opacity-90">Our travel experts are here to help you plan your perfect trek</p>
               </div>
-              <button className="bg-white text-orange-600 hover:bg-gray-100 px-6 py-3 rounded-xl font-semibold text-sm transition-colors duration-300 flex items-center space-x-2">
+              <button 
+                onClick={() => navigate('/contact')}
+                className="bg-white text-orange-600 hover:bg-gray-100 px-6 py-3 rounded-xl font-semibold text-sm transition-colors duration-300 flex items-center space-x-2"
+              >
                 <HelpCircle className="h-5 w-5" />
                 <span>Contact Support</span>
               </button>

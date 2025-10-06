@@ -46,24 +46,14 @@ const Profile = () => {
     }
   };
 
-  const getStatusBadge = (status, type = 'booking') => {
+  const getStatusBadge = (status) => {
     const baseClasses = "px-3 py-1 rounded-full text-xs font-semibold uppercase";
-    
-    if (type === 'booking') {
-      const statusColors = {
-        confirmed: 'bg-green-100 text-green-800',
-        pending: 'bg-yellow-100 text-yellow-800',
-        cancelled: 'bg-red-100 text-red-800'
-      };
-      return `${baseClasses} ${statusColors[status] || 'bg-gray-100 text-gray-800'}`;
-    } else {
-      const statusColors = {
-        paid: 'bg-green-100 text-green-800',
-        pending: 'bg-yellow-100 text-yellow-800',
-        cancelled: 'bg-red-100 text-red-800'
-      };
-      return `${baseClasses} ${statusColors[status] || 'bg-gray-100 text-gray-800'}`;
-    }
+    const statusColors = {
+      confirmed: 'bg-green-100 text-green-800',
+      pending: 'bg-yellow-100 text-yellow-800',
+      cancelled: 'bg-red-100 text-red-800'
+    };
+    return `${baseClasses} ${statusColors[status] || 'bg-gray-100 text-gray-800'}`;
   };
 
   const formatDate = (dateString) => {
@@ -186,18 +176,9 @@ const Profile = () => {
                       )}
                     </div>
 
-                    <div className="hidden lg:flex lg:flex-col lg:items-end lg:space-y-2 lg:ml-6">
-                      <span className={getStatusBadge(booking.bookingStatus, 'booking')}>
+                    <div className="mt-3 lg:mt-0 lg:ml-6">
+                      <span className={getStatusBadge(booking.bookingStatus)}>
                         {booking.bookingStatus}
-                      </span>
-                      <span className={getStatusBadge(booking.paymentStatus, 'payment')}>
-                        {booking.paymentStatus}
-                      </span>
-                    </div>
-
-                    <div className="flex lg:hidden mt-3 space-x-2">
-                      <span className={getStatusBadge(booking.paymentStatus, 'payment')}>
-                        Payment: {booking.paymentStatus}
                       </span>
                     </div>
                   </div>

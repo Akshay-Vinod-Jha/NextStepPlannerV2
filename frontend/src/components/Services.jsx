@@ -25,12 +25,12 @@ const services = [
   {
     icon: <Camera className="h-8 w-8" />,
     title: "Photography Tours",
-    description: "Specialized photography expeditions to capture India's most scenic landscapes"
+    description: "Specialized photography expeditions to capture Sahyadri's most scenic landscapes and forts"
   },
   {
     icon: <Map className="h-8 w-8" />,
     title: "Cultural Immersion",
-    description: "Authentic village stays and cultural experiences with local communities"
+    description: "Authentic village stays and explore Maratha heritage with local communities"
   }
 ];
 
@@ -44,7 +44,7 @@ const Services = () => {
             Our <span className="text-orange-600">Services</span>
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Comprehensive trekking services designed to make your Himalayan adventure safe, memorable, and extraordinary
+            Comprehensive trekking services designed to make your Sahyadri adventure safe, memorable, and extraordinary
           </p>
         </div>
 
@@ -65,27 +65,6 @@ const Services = () => {
               </p>
             </div>
           ))}
-        </div>
-
-        <div className="mt-16 bg-gradient-to-r from-orange-600 to-red-600 rounded-2xl p-8 md:p-12 text-center text-white">
-          <h3 className="text-3xl md:text-4xl font-bold mb-4">
-            Ready for Your Adventure?
-          </h3>
-          <p className="text-xl mb-8 opacity-90">
-            Join thousands of trekkers who have discovered India's natural wonders with us
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button 
-            onClick={() => navigate("/destinations")}
-            className="bg-white text-orange-600 hover:bg-gray-100 px-8 py-4 rounded-full font-semibold transition-colors duration-300">
-              Book Now
-            </button>
-            <button 
-            onClick={() => navigate("/destinations")}
-            className="border-2 border-white hover:bg-white hover:text-orange-600 px-8 py-4 rounded-full font-semibold transition-all duration-300">
-              Custom Trip
-            </button>
-          </div>
         </div>
       </div>
     </section>

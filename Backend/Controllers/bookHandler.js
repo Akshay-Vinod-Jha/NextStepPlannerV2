@@ -98,7 +98,6 @@ export async function handleTreckBooking(req, res) {
       amountPaid,
       mobileNumber,
       paymentScreenshot,
-      paymentStatus : 'pending',
       bookingStatus : 'pending',
     });
 
@@ -200,24 +199,19 @@ export async function updateBookingStatus(req, res) {
   
   try {
     const { bookingId } = req.params;
-    const { bookingStatus, paymentStatus } = req.body;
+    const { bookingStatus } = req.body;
 
     if (!bookingId) {
       return res.status(400).json({ error: "Booking ID is required!" });
     }
 
-    if (!bookingStatus && !paymentStatus) {
-      return res.status(400).json({ error: "At least one status field is required!" });
+    if (!bookingStatus) {
+      return res.status(400).json({ error: "Booking status is required!" });
     }
-
-    // Build update object
-    const updateData = {};
-    if (bookingStatus) updateData.bookingStatus = bookingStatus;
-    if (paymentStatus) updateData.paymentStatus = paymentStatus;
 
     const updatedBooking = await Booking.findByIdAndUpdate(
       bookingId,
-      updateData,
+      { bookingStatus },
       { new: true, runValidators: true }
     ).populate('userId', 'name email')
      .populate('destinationId', 'name location');
