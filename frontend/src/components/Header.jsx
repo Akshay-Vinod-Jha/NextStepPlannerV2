@@ -455,19 +455,6 @@ const Header = () => {
           </button>
         )}
 
-        { userRole === 'USER' && (
-          <button
-            onClick={() => {
-              navigate('/trek-history'); // Assuming a trek history route
-              setIsDropdownOpen(false);
-            }}
-            className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-          >
-            <History className="mr-3 h-5 w-5 text-gray-500" />
-            <span>Trek History</span>
-          </button>
-        )}
-
         <div className="border-t border-gray-100"></div>
         <button
           onClick={handleUserLogOut}

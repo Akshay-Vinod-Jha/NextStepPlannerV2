@@ -158,6 +158,42 @@ export async function getDestinationBookings(req, res) {
   }
 }
 
+// Get all bookings for a specific user
+export async function getUserBookings(req, res) {
+  console.log("Request to get user bookings received");
+  
+  try {
+    const { userId } = req.params;
+
+    if (!userId) {
+      return res.status(400).json({ error: "User ID is required!" });
+    }
+
+    console.log("Fetching bookings for user:", userId);
+
+    // Fetch all bookings for this user
+    const bookings = await Booking.find({ userId })
+      .populate({
+        path: 'destinationId',
+        select: 'name location price',
+        options: { strictPopulate: false }
+      })
+      .sort({ createdAt: -1 })
+      .lean();
+
+    console.log(`Found ${bookings.length} bookings for user ${userId}`);
+
+    return res.status(200).json({
+      msg: "Bookings fetched successfully!",
+      data: bookings
+    });
+
+  } catch (err) {
+    console.error("Error fetching user bookings:", err);
+    return res.status(500).json({ error: "Server error while fetching bookings." });
+  }
+}
+
 // Update booking status (Admin only)
 export async function updateBookingStatus(req, res) {
   console.log("Request to update booking status received");

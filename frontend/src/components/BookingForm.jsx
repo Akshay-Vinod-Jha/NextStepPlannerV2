@@ -1,11 +1,14 @@
 import axios from "axios";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   MapPin, ArrowLeft,
   AlertCircle, Phone, Upload, Image, CheckCircle, X
 } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import qrCode from '../assets/qr.jpg';
+import { sendBookingConfirmation } from '../utils/emailService';
+import { useSelector } from 'react-redux';
 
 const BookingForm = () => {
     const location = useLocation();
@@ -27,8 +30,30 @@ const BookingForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showThankYou, setShowThankYou] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
+  const [userEmail, setUserEmail] = useState('');
+  const [userName, setUserName] = useState('');
 
   const totalPrice = destination.price * formData.numPersons;
+
+  // Fetch user details from token
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        const response = await axios.post(
+          "http://localhost:5001/gettokendetails",
+          {},
+          { withCredentials: true }
+        );
+        if (response.status === 200 && response.data) {
+          setUserEmail(response.data.email || '');
+          setUserName(response.data.name || '');
+        }
+      } catch (error) {
+        console.error("Error fetching user details:", error);
+      }
+    };
+    fetchUserDetails();
+  }, []);
 
   // Mobile number validation for Indian numbers
   const validateMobileNumber = (mobile) => {
@@ -123,6 +148,36 @@ const handleSubmit = async (e) => {
     if(response.status === 200)
     {
       console.log("Booking success:", response.data);
+      
+      // Send confirmation email to user
+      if (userEmail && userName) {
+        // Format dates properly for email
+        const formatDate = (dateStr) => {
+          const date = new Date(dateStr);
+          const day = date.getDate().toString().padStart(2, '0');
+          const month = (date.getMonth() + 1).toString().padStart(2, '0');
+          const year = date.getFullYear();
+          return `${day}/${month}/${year}`;
+        };
+        
+        const bookingData = {
+          userName: userName,
+          userEmail: userEmail,
+          trekName: destination.name,
+          trekLocation: destination.location,
+          trekDate: `${formatDate(startDateStr)} - ${formatDate(endDateStr)}`,
+          numPersons: formData.numPersons,
+          totalAmount: (destination.price * formData.numPersons).toLocaleString(),
+        };
+        
+        const emailResult = await sendBookingConfirmation(bookingData);
+        if (emailResult.success) {
+          console.log("Confirmation email sent to user");
+        } else {
+          console.log("Failed to send confirmation email, but booking was successful");
+        }
+      }
+      
       setShowThankYou(true);
     }
     
@@ -307,6 +362,28 @@ const handleSubmit = async (e) => {
                 </div>
               </div>
 
+              {/* Payment QR Code */}
+              <div className="mb-6 bg-white border-2 border-orange-200 rounded-xl p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-3 text-center">
+                  Scan QR Code to Pay
+                </h3>
+                <div className="flex justify-center mb-4">
+                  <img 
+                    src={qrCode} 
+                    alt="Payment QR Code" 
+                    className="w-64 h-64 object-contain border-2 border-orange-100 rounded-lg shadow-md"
+                  />
+                </div>
+                <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                  <p className="text-sm text-gray-700 text-center">
+                    <span className="font-semibold text-orange-600">Total Amount: ₹{totalPrice.toLocaleString()}</span>
+                  </p>
+                  <p className="text-xs text-gray-600 text-center mt-2">
+                    Please scan the QR code above using any UPI app and complete the payment
+                  </p>
+                </div>
+              </div>
+
               {/* Payment Screenshot Upload */}
               <div className="mb-6">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -380,11 +457,11 @@ const handleSubmit = async (e) => {
                   />
                   <label htmlFor="acceptTerms" className="text-sm text-gray-700">
                     I agree to the{' '}
-                    <a href="#" className="text-orange-600 hover:text-orange-700 underline">
+                    <a href="/terms" target="_blank" rel="noopener noreferrer" className="text-orange-600 hover:text-orange-700 underline">
                       Terms and Conditions
                     </a>
                     {' '}and{' '}
-                    <a href="#" className="text-orange-600 hover:text-orange-700 underline">
+                    <a href="/privacy" target="_blank" rel="noopener noreferrer" className="text-orange-600 hover:text-orange-700 underline">
                       Privacy Policy
                     </a>
                   </label>
@@ -437,14 +514,14 @@ const handleSubmit = async (e) => {
                 <p className="text-sm font-semibold text-orange-800 mb-2">
                   📱 Join the WhatsApp Group for further updates regarding the Trek
                 </p>
-                <p>https://chat.whatsapp.com/new-grp</p>
+    
                 
               </div>
             </div>
 
             {/* WhatsApp Group Button */}
             <a
-              href="https://chat.whatsapp.com/new-grp"
+              href="https://chat.whatsapp.com/JTByVDWXBmiKMWGuO2Lfex"
               target="_blank"
               rel="noopener noreferrer"
               className="block w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-semibold text-center transition-colors duration-300 mb-3"

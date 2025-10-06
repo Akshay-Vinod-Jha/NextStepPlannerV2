@@ -18,5 +18,8 @@ import EditTrekForm from "./EditTrekForm";
 import { checkUserAuthLoader,checkAdminAuthLoader } from "./checkAuthLoader";
 import Unauthorized from "./Unauthorized";
 import AdminBookings from "./AdminBookings";
+import Profile from "./Profile";
+import TermsAndConditions from "./TermsAndConditions";
+import PrivacyPolicy from "./PrivacyPolicy";
 
-export { Header, Hero, Card, Footer, Destinations,Contact, Gallery, AllDestinations, Services, Testimonials, AdminTrekForm, EditTrekForm, SignInForm, SignUpForm , DestinationDetails , BookingForm, AdminPanel,checkAdminAuthLoader,checkUserAuthLoader,Unauthorized, AdminBookings};
+export { Header, Hero, Card, Footer, Destinations,Contact, Gallery, AllDestinations, Services, Testimonials, AdminTrekForm, EditTrekForm, SignInForm, SignUpForm , DestinationDetails , BookingForm, AdminPanel,checkAdminAuthLoader,checkUserAuthLoader,Unauthorized, AdminBookings, Profile, TermsAndConditions, PrivacyPolicy};
