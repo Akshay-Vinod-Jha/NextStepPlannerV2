@@ -51,9 +51,10 @@ export const handlsUserSignIn = async (req,res) => {
 export const handleSignUpUserViaGoogleAuth = async (req, res) => {
   try {
     const user = req.user; // Comes from Passport Google OAuth strategy
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
 
     if (!user) {
-      return res.redirect('http://localhost:5173/login?error=oauth_failed');
+      return res.redirect(`${frontendUrl}/signin?error=oauth_failed`);
     }
 
     const token = createTokenForUser(user);
@@ -61,18 +62,18 @@ export const handleSignUpUserViaGoogleAuth = async (req, res) => {
    
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false,    // Set to true in production with HTTPS
+      secure: process.env.NODE_ENV === 'production',    // Set to true in production with HTTPS
       sameSite: "Lax",
       maxAge: 72 * 60 * 60 * 1000, // 3 days
     });
 
     // Redirect to frontend dashboard or callback page
-    return res.redirect('http://localhost:5173/');
+    return res.redirect(`${frontendUrl}/`);
     
   }
    catch (err) {
     console.error("OAuth signup error:", err);
-    return res.redirect('http://localhost:5173/login?error=oauth_failed');
+    return res.redirect(`${frontendUrl}/signin?error=oauth_failed`);
   }
 
 }
