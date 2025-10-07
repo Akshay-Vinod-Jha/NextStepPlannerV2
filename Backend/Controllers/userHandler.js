@@ -49,7 +49,7 @@ export const handlsUserSignIn = async (req, res) => {
     })
     .json({ msg: "Sign In succedded", role: user.role });
 };
-
+// https://next-step-planner-v2-sze3.vercel.app/
 export const handleSignUpUserViaGoogleAuth = async (req, res) => {
   try {
     const user = req.user; // Comes from Passport Google OAuth strategy
