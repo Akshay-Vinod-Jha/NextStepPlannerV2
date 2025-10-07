@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { Phone, Mail, MapPin, Send } from "lucide-react";
+import { Mail, MapPin, Send, Instagram, Loader2, CheckCircle } from "lucide-react";
+import { sendContactEmail } from "../utils/emailService";
+import { toast } from "react-toastify";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -9,11 +11,41 @@ const Contact = () => {
     trek: "",
     message: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission
-    console.log("Form submitted:", formData);
+    
+    setIsSubmitting(true);
+    
+    try {
+      const result = await sendContactEmail(formData);
+      
+      if (result.success) {
+        setSubmitSuccess(true);
+        toast.success("Message sent successfully! We'll get back to you soon.");
+        
+        // Reset form after 3 seconds
+        setTimeout(() => {
+          setFormData({
+            name: "",
+            email: "",
+            phone: "",
+            trek: "",
+            message: "",
+          });
+          setSubmitSuccess(false);
+        }, 3000);
+      } else {
+        toast.error("Failed to send message. Please try again or email us directly.");
+      }
+    } catch (error) {
+      console.error("Error sending email:", error);
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e) => {
@@ -31,8 +63,7 @@ const Contact = () => {
             Plan Your <span className="text-orange-600">Adventure</span>
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Ready to embark on your Himalayan journey? Get in touch with our
-            trekking experts
+            Ready to explore Maharashtra's beautiful treks? Get in touch with us
           </p>
         </div>
 
@@ -45,21 +76,30 @@ const Contact = () => {
             <div className="space-y-6">
               <div className="flex items-center space-x-4">
                 <div className="bg-orange-600 p-3 rounded-full">
-                  <Phone className="h-6 w-6 text-white" />
+                  <Mail className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                  <h4 className="font-semibold text-gray-900">Phone</h4>
-                  <p className="text-gray-600">+91 98765 43210</p>
+                  <h4 className="font-semibold text-gray-900">Email</h4>
+                  <a href="mailto:contact.trekoraadventures@gmail.com" className="text-gray-600 hover:text-orange-600 transition-colors break-all">
+                    contact.trekoraadventures@gmail.com
+                  </a>
                 </div>
               </div>
 
               <div className="flex items-center space-x-4">
                 <div className="bg-orange-600 p-3 rounded-full">
-                  <Mail className="h-6 w-6 text-white" />
+                  <Instagram className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                  <h4 className="font-semibold text-gray-900">Email</h4>
-                  <p className="text-gray-600">info@nisargpath.com</p>
+                  <h4 className="font-semibold text-gray-900">Instagram</h4>
+                  <a 
+                    href="https://www.instagram.com/trekora.adventures" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-gray-600 hover:text-orange-600 transition-colors"
+                  >
+                    @trekora.adventures
+                  </a>
                 </div>
               </div>
 
@@ -68,20 +108,20 @@ const Contact = () => {
                   <MapPin className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                  <h4 className="font-semibold text-gray-900">Office</h4>
-                  <p className="text-gray-600">Rishikesh, Uttarakhand, India</p>
+                  <h4 className="font-semibold text-gray-900">Location</h4>
+                  <p className="text-gray-600">Maharashtra, India</p>
                 </div>
               </div>
             </div>
 
             <div className="mt-8 p-6 bg-gradient-to-r from-orange-600 to-red-600 rounded-2xl text-white">
-              <h4 className="text-xl font-bold mb-2">Why Choose NisargPath?</h4>
+              <h4 className="text-xl font-bold mb-2">Why Choose Trekora?</h4>
               <ul className="space-y-2 text-sm">
-                <li>• 15+ years of trekking experience</li>
-                <li>• Certified mountain guides</li>
-                <li>• Small group sizes (max 12 people)</li>
-                <li>• 24/7 emergency support</li>
-                <li>• Eco-friendly practices</li>
+                <li>• Explore Maharashtra's scenic treks</li>
+                <li>• Expert local guides</li>
+                <li>• Safe and organized trips</li>
+                <li>• Affordable packages</li>
+                <li>• Memorable adventures</li>
               </ul>
             </div>
           </div>
@@ -162,12 +202,8 @@ const Contact = () => {
                     className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-600 focus:border-transparent transition-colors"
                   >
                     <option value="">Select a trek</option>
-                    <option value="roopkund">Roopkund Trek</option>
-                    <option value="valley-of-flowers">Valley of Flowers</option>
-                    <option value="chadar">Chadar Trek</option>
-                    <option value="hampta-pass">Hampta Pass</option>
-                    <option value="kedarkantha">Kedarkantha Trek</option>
-                    <option value="custom">Custom Trek</option>
+                    <option value="general">General Inquiry</option>
+                    <option value="custom">Custom Trek Request</option>
                   </select>
                 </div>
               </div>
@@ -192,10 +228,31 @@ const Contact = () => {
 
               <button
                 type="submit"
-                className="w-full bg-orange-600 hover:bg-orange-700 text-white py-4 rounded-lg font-semibold flex items-center justify-center space-x-2 transition-colors duration-300"
+                disabled={isSubmitting || submitSuccess}
+                className={`w-full py-4 rounded-lg font-semibold flex items-center justify-center space-x-2 transition-all duration-300 ${
+                  submitSuccess
+                    ? 'bg-green-600 hover:bg-green-700'
+                    : isSubmitting
+                    ? 'bg-orange-400 cursor-not-allowed'
+                    : 'bg-orange-600 hover:bg-orange-700'
+                } text-white`}
               >
-                <span>Send Message</span>
-                <Send className="h-5 w-5" />
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                    <span>Sending...</span>
+                  </>
+                ) : submitSuccess ? (
+                  <>
+                    <CheckCircle className="h-5 w-5" />
+                    <span>Sent Successfully!</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Send Message</span>
+                    <Send className="h-5 w-5" />
+                  </>
+                )}
               </button>
             </form>
           </div>

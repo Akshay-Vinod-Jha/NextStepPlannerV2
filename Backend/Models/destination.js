@@ -27,6 +27,11 @@ const destinationSchema = new Schema({
     rating: Number,
     price: Number,
     description: String,
+    status: {
+        type: String,
+        enum: ['available', 'unavailable'],
+        default: 'available'
+    }
 },{timestamps:true});
 
 const Destination = mongoose.model("Destination",destinationSchema);

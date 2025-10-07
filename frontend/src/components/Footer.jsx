@@ -1,68 +1,125 @@
 import React from 'react';
-import { Mountain, Facebook, Instagram, Twitter, Mail } from 'lucide-react';
+import { Mountain, Instagram, Mail, MapPin, Phone } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import logo from '../assets/trekora1.png';
 
 const Footer = () => {
+  const navigate = useNavigate();
+
   return (
     <footer className="bg-gray-900 text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 py-12">
-          <div className="col-span-1 md:col-span-2">
-            <div className="flex items-center space-x-2 mb-4">
-              <Mountain className="h-8 w-8 text-orange-600" />
-              <span className="text-2xl font-bold">NisargPath</span>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+          {/* Brand Section */}
+          <div>
+            <div className="flex items-center space-x-3 mb-4">
+              <div className="bg-white p-2 rounded-lg">
+                <img src={logo} alt="Trekora" className="h-10 w-auto" />
+              </div>
+              <span className="text-2xl font-bold">Trekora</span>
             </div>
-            <p className="text-gray-400 mb-6 max-w-md">
-              Discover the magic of India's Himalayas with expert-guided trekking adventures. 
-              Creating unforgettable memories since 2008.
+            <p className="text-gray-400 mb-6 text-sm leading-relaxed">
+              Your gateway to unforgettable trekking adventures across Maharashtra. 
+              Explore nature, challenge yourself, and create lasting memories.
             </p>
-            <div className="flex space-x-4">
-              <a href="#" className="text-gray-400 hover:text-orange-600 transition-colors">
-                <Facebook className="h-6 w-6" />
+          </div>
+
+          {/* Quick Navigation */}
+          <div>
+            <h3 className="text-lg font-semibold mb-4 text-orange-500">Explore</h3>
+            <ul className="space-y-3">
+              <li>
+                <button 
+                  onClick={() => navigate('/')} 
+                  className="text-gray-400 hover:text-orange-500 transition-colors text-sm"
+                >
+                  Home
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={() => navigate('/destinations')} 
+                  className="text-gray-400 hover:text-orange-500 transition-colors text-sm"
+                >
+                  Destinations
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={() => navigate('/services')} 
+                  className="text-gray-400 hover:text-orange-500 transition-colors text-sm"
+                >
+                  Services
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={() => navigate('/gallery')} 
+                  className="text-gray-400 hover:text-orange-500 transition-colors text-sm"
+                >
+                  Gallery
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={() => navigate('/contact')} 
+                  className="text-gray-400 hover:text-orange-500 transition-colors text-sm"
+                >
+                  Contact
+                </button>
+              </li>
+            </ul>
+          </div>
+
+          {/* Contact Section */}
+          <div>
+            <h3 className="text-lg font-semibold mb-4 text-orange-500">Get in Touch</h3>
+            <div className="space-y-4">
+              <a 
+                href="mailto:contact.trekoraadventures@gmail.com" 
+                className="flex items-start space-x-3 text-gray-400 hover:text-orange-500 transition-colors group"
+              >
+                <Mail className="h-5 w-5 mt-0.5 flex-shrink-0 group-hover:text-orange-500" />
+                <span className="text-sm break-all">contact.trekoraadventures@gmail.com</span>
               </a>
-              <a href="#" className="text-gray-400 hover:text-orange-600 transition-colors">
-                <Instagram className="h-6 w-6" />
+              
+              <a 
+                href="https://www.instagram.com/trekora.adventures" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center space-x-3 text-gray-400 hover:text-orange-500 transition-colors group"
+              >
+                <Instagram className="h-5 w-5 flex-shrink-0 group-hover:text-orange-500" />
+                <span className="text-sm">@trekora.adventures</span>
               </a>
-              <a href="#" className="text-gray-400 hover:text-orange-600 transition-colors">
-                <Twitter className="h-6 w-6" />
-              </a>
-              <a href="#" className="text-gray-400 hover:text-orange-600 transition-colors">
-                <Mail className="h-6 w-6" />
-              </a>
+
+              <div className="flex items-start space-x-3 text-gray-400">
+                <MapPin className="h-5 w-5 mt-0.5 flex-shrink-0 text-orange-500" />
+                <span className="text-sm">Maharashtra, India</span>
+              </div>
             </div>
-          </div>
-
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
-            <ul className="space-y-2">
-              <li><a href="#home" className="text-gray-400 hover:text-orange-600 transition-colors">Home</a></li>
-              <li><a href="#destinations" className="text-gray-400 hover:text-orange-600 transition-colors">Destinations</a></li>
-              <li><a href="#services" className="text-gray-400 hover:text-orange-600 transition-colors">Services</a></li>
-              <li><a href="#gallery" className="text-gray-400 hover:text-orange-600 transition-colors">Gallery</a></li>
-              <li><a href="#contact" className="text-gray-400 hover:text-orange-600 transition-colors">Contact</a></li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Popular Treks</h3>
-            <ul className="space-y-2">
-              <li><a href="#" className="text-gray-400 hover:text-orange-600 transition-colors">Roopkund Trek</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-orange-600 transition-colors">Valley of Flowers</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-orange-600 transition-colors">Chadar Trek</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-orange-600 transition-colors">Kedarkantha</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-orange-600 transition-colors">Hampta Pass</a></li>
-            </ul>
           </div>
         </div>
 
-        <div className="border-t border-gray-800 py-6">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-gray-400 text-sm">
-              © 2024 NisargPath. All rights reserved.
+        {/* Bottom Bar */}
+        <div className="border-t border-gray-800 mt-10 pt-8">
+          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+            <p className="text-gray-500 text-sm">
+              © {new Date().getFullYear()} Trekora. All rights reserved.
             </p>
-            <div className="flex space-x-6 mt-4 md:mt-0">
-              <a href="#" className="text-gray-400 hover:text-orange-600 transition-colors text-sm">Privacy Policy</a>
-              <a href="#" className="text-gray-400 hover:text-orange-600 transition-colors text-sm">Terms of Service</a>
-              <a href="#" className="text-gray-400 hover:text-orange-600 transition-colors text-sm">Cancellation Policy</a>
+            <div className="flex flex-wrap justify-center gap-6">
+              <button 
+                onClick={() => navigate('/privacy')}
+                className="text-gray-500 hover:text-orange-500 transition-colors text-sm"
+              >
+                Privacy Policy
+              </button>
+              <button 
+                onClick={() => navigate('/terms')}
+                className="text-gray-500 hover:text-orange-500 transition-colors text-sm"
+              >
+                Terms & Conditions
+              </button>
             </div>
           </div>
         </div>

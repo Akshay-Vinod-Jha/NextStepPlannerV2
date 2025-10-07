@@ -290,6 +290,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { setIsAdmin, setIsAuthenticated } from "../Features/roleSlice.js"; // Assuming you have these actions
 import { toast } from "react-toastify";
 import { set } from "mongoose";
+import logo from "../assets/trekora1.png";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -454,19 +455,6 @@ const Header = () => {
           </button>
         )}
 
-        { userRole === 'USER' && (
-          <button
-            onClick={() => {
-              navigate('/trek-history'); // Assuming a trek history route
-              setIsDropdownOpen(false);
-            }}
-            className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-          >
-            <History className="mr-3 h-5 w-5 text-gray-500" />
-            <span>Trek History</span>
-          </button>
-        )}
-
         <div className="border-t border-gray-100"></div>
         <button
           onClick={handleUserLogOut}
@@ -498,8 +486,10 @@ const Header = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
           <button className="flex items-center space-x-2" onClick={() => navigate("/")}>
-            <Mountain className="h-8 w-8 text-orange-600" />
-            <span className={`text-2xl font-bold ${isHomePage ? (isScrolled ? 'text-gray-800' : 'text-gray-200') : 'text-gray-800'} hover:text-orange-600`}>NisargPath</span>
+            <div className="bg-white p-2 rounded-lg shadow-sm">
+              <img src={logo} alt="Trekora" className="h-10 w-auto" />
+            </div>
+            <span className={`text-2xl font-bold ${isHomePage ? (isScrolled ? 'text-gray-800' : 'text-gray-200') : 'text-gray-800'} hover:text-orange-600`}>Trekora</span>
           </button>
 
           {/* Desktop Navigation */}

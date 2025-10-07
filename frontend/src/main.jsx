@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Layout from './Layout.jsx'
-import { Hero, Contact,Destinations, Gallery, AllDestinations, Services, Testimonials,AdminTrekForm, SignInForm, SignUpForm ,DestinationDetails , BookingForm, AdminPanel, EditTrekForm, checkUserAuthLoader, checkAdminAuthLoader, Unauthorized, AdminTreckBookings} from './components'
+import { Hero, Contact,Destinations, Gallery, AllDestinations, Services, Testimonials,AdminTrekForm, SignInForm, SignUpForm ,DestinationDetails , BookingForm, AdminPanel, EditTrekForm, checkUserAuthLoader, checkAdminAuthLoader, Unauthorized, AdminBookings, Profile, TermsAndConditions, PrivacyPolicy} from './components'
 
 import {Provider} from "react-redux"
 import { store } from './App/store.js'
@@ -39,8 +39,8 @@ const router = createBrowserRouter([
         loader : checkAdminAuthLoader,
       },
        {
-        path: '/admintreckbookings',
-        element: <AdminTreckBookings />,
+        path: '/admin/bookings',
+        element: <AdminBookings />,
         loader : checkAdminAuthLoader,
       },
   {
@@ -86,8 +86,21 @@ const router = createBrowserRouter([
         element : <BookingForm/>,
         loader : checkUserAuthLoader,
       },
+      {
+        path : 'profile',
+        element : <Profile/>,
+        loader : checkUserAuthLoader,
+      },
     
     ]},
+    {
+      path: '/terms',
+      element: <TermsAndConditions />
+    },
+    {
+      path: '/privacy',
+      element: <PrivacyPolicy />
+    },
     {
         path : "*",
         element : <Unauthorized/>

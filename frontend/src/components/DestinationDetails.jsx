@@ -14,6 +14,7 @@ const DestinationDetails = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const destination = location.state;
+  const isAvailable = destination.status === 'available';
 
   console.log(destination);
 
@@ -53,6 +54,12 @@ const DestinationDetails = () => {
  
 
 const handleNavigateBookingForm = async () => {
+  // Check if trek is available
+  if (!isAvailable) {
+    toast.error("This trek is currently unavailable for booking!");
+    return;
+  }
+
   try {
     const response = await axios.post(
       "http://localhost:5001/gettokendetails",
@@ -144,6 +151,14 @@ const handleNavigateBookingForm = async () => {
               <Star className="h-4 w-4 mr-1 text-yellow-400 fill-current" />
               <span className="text-sm">{destination.rating}</span>
             </div>
+            {/* Status Badge */}
+            <div className={`px-3 py-1 rounded-full text-xs font-semibold uppercase ${
+              isAvailable 
+                ? 'bg-green-500/90 text-white' 
+                : 'bg-red-500/90 text-white'
+            }`}>
+              {isAvailable ? 'Available' : 'Unavailable'}
+            </div>
           </div>
         </div>
       </div>
@@ -186,7 +201,11 @@ const handleNavigateBookingForm = async () => {
             </div>
 
             {/* Pricing Section */}
-            <div className="bg-gradient-to-r from-orange-600 to-red-600 rounded-2xl p-6 text-white">
+            <div className={`rounded-2xl p-6 text-white ${
+              isAvailable 
+                ? 'bg-gradient-to-r from-orange-600 to-red-600' 
+                : 'bg-gradient-to-r from-gray-400 to-gray-500'
+            }`}>
               <div className="mb-4">
                 <p className="text-sm opacity-90 mb-1">Starting from</p>
                 <div className="flex items-center">
@@ -194,12 +213,29 @@ const handleNavigateBookingForm = async () => {
                   <span className="text-4xl font-bold">{destination.price.toLocaleString()}</span>
                 </div>
               </div>
-              <button className="w-full bg-white text-orange-600 hover:bg-gray-100 py-3 rounded-xl font-semibold text-base transition-colors duration-300"
-              onClick={handleNavigateBookingForm}
-              >
-                Book Now
-              </button>
-              <p className="text-xs opacity-90 mt-3">* Price includes accommodation, meals, permits, and guide services</p>
+              
+              {isAvailable ? (
+                <button 
+                  className="w-full bg-white text-orange-600 hover:bg-gray-100 py-3 rounded-xl font-semibold text-base transition-colors duration-300"
+                  onClick={handleNavigateBookingForm}
+                >
+                  Book Now
+                </button>
+              ) : (
+                <button 
+                  className="w-full bg-white/50 text-gray-700 py-3 rounded-xl font-semibold text-base cursor-not-allowed"
+                  disabled
+                >
+                  Currently Unavailable
+                </button>
+              )}
+              
+              <p className="text-xs opacity-90 mt-3">
+                {isAvailable 
+                  ? '* Price includes accommodation, meals, permits, and guide services'
+                  : '* This trek is temporarily unavailable. Please check back later.'
+                }
+              </p>
             </div>
           </div>
 
@@ -316,7 +352,10 @@ const handleNavigateBookingForm = async () => {
                 <h2 className="text-xl font-bold mb-1">Need Help?</h2>
                 <p className="text-sm opacity-90">Our travel experts are here to help you plan your perfect trek</p>
               </div>
-              <button className="bg-white text-orange-600 hover:bg-gray-100 px-6 py-3 rounded-xl font-semibold text-sm transition-colors duration-300 flex items-center space-x-2">
+              <button 
+                onClick={() => navigate('/contact')}
+                className="bg-white text-orange-600 hover:bg-gray-100 px-6 py-3 rounded-xl font-semibold text-sm transition-colors duration-300 flex items-center space-x-2"
+              >
                 <HelpCircle className="h-5 w-5" />
                 <span>Contact Support</span>
               </button>

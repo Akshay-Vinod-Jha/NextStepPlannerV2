@@ -4,39 +4,39 @@ import { X } from 'lucide-react';
 const galleryImages = [
   {
     id: 1,
-    src: "https://images.pexels.com/photos/1761279/pexels-photo-1761279.jpeg?auto=compress&cs=tinysrgb&w=800",
-    alt: "Valley of Flowers",
-    location: "Uttarakhand"
+    src: "https://tse2.mm.bing.net/th/id/OIP.S0F9fFQRoqd4VyuRR6q8iAHaE9?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3",
+    alt: "Rajgad Fort Trek",
+    location: "Maharashtra - Pune"
   },
   {
     id: 2,
-    src: "https://images.pexels.com/photos/1591447/pexels-photo-1591447.jpeg?auto=compress&cs=tinysrgb&w=800",
-    alt: "Himalayan Peaks",
-    location: "Himachal Pradesh"
+    src: "https://nomadsofindia.com/wp-content/uploads/2023/04/Kalsubai-Trek-2.jpg",
+    alt: "Kalsubai Peak",
+    location: "Maharashtra - Highest Peak"
   },
   {
     id: 3,
-    src: "https://images.pexels.com/photos/1266810/pexels-photo-1266810.jpeg?auto=compress&cs=tinysrgb&w=800",
-    alt: "Mountain Lake",
-    location: "Ladakh"
+    src: "https://harishchandragad.in/wp-content/uploads/2022/04/IMG_20201029_114832-scaled.jpg",
+    alt: "Harishchandragad Trek",
+    location: "Maharashtra - Ahmednagar"
   },
   {
     id: 4,
-    src: "https://images.pexels.com/photos/1670187/pexels-photo-1670187.jpeg?auto=compress&cs=tinysrgb&w=800",
-    alt: "Frozen River Trek",
-    location: "Ladakh"
+    src: "https://www.holidify.com/images/bgImages/RAJMACHI.jpg",
+    alt: "Rajmachi Fort",
+    location: "Maharashtra - Lonavala"
   },
   {
     id: 5,
-    src: "https://images.pexels.com/photos/1559821/pexels-photo-1559821.jpeg?auto=compress&cs=tinysrgb&w=800",
-    alt: "Alpine Meadows",
-    location: "Kashmir"
+    src: "https://tse2.mm.bing.net/th/id/OIP.o7IOpWYcTexStqlegb0h5wHaEc?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3",
+    alt: "Sahyadri Mountain Range",
+    location: "Maharashtra - Western Ghats"
   },
   {
     id: 6,
-    src: "https://images.pexels.com/photos/1271619/pexels-photo-1271619.jpeg?auto=compress&cs=tinysrgb&w=800",
-    alt: "Snow Covered Trails",
-    location: "Uttarakhand"
+    src: "https://pbs.twimg.com/media/FDKAXTOVQAQOZOn.jpg:large",
+    alt: "Monsoon Treks",
+    location: "Maharashtra - Raigad"
   }
 ];
 
@@ -51,7 +51,7 @@ const Gallery = () => {
             Photo <span className="text-orange-600">Gallery</span>
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Witness the breathtaking beauty of India's trekking destinations through our lens
+            Discover the stunning landscapes of Maharashtra's trekking destinations
           </p>
         </div>
 

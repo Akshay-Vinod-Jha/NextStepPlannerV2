@@ -1,4 +1,6 @@
 import Booking from "../Models/booking.js";
+import Destination from "../Models/destination.js";
+import User from "../Models/user.js";
 import { v4 as uuidv4 } from 'uuid';
 
 // Generate 10-digit numeric booking ID like "NP-1234567890"
@@ -30,18 +32,48 @@ export async function handleTreckBooking(req, res) {
     const userId = req.user.userId;
     const destinationId = req.params.destinationId;
 
+    // Check if destination exists and is available
+    const destination = await Destination.findById(destinationId);
+    
+    if (!destination) {
+      return res.status(404).json({ error: "Destination not found!" });
+    }
+
+    if (destination.status === 'unavailable') {
+      return res.status(403).json({ error: "This trek is currently unavailable for booking!" });
+    }
+
     const {
       numPersons,
-      dateSlot,
+      startDate,
+      endDate,
       orderId,
       paymentId,
       mobileNumber,
       amountPaid
     } = req.body;
 
-    if (!userId || !destinationId || !numPersons || !dateSlot || !dateSlot.startDate || !dateSlot.endDate || !amountPaid || !mobileNumber) {
+    // Handle payment screenshot from file upload
+    let paymentScreenshot = null;
+    if (req.file) {
+      paymentScreenshot = {
+        url: req.file.path,
+        filename: req.file.filename
+      };
+    }
+
+    if (!userId || !destinationId || !numPersons || !startDate || !endDate || !amountPaid || !mobileNumber) {
       return res.status(400).json({ error: "Invalid or missing input fields!" });
     }
+
+    if (!paymentScreenshot) {
+      return res.status(400).json({ error: "Payment screenshot is required!" });
+    }
+
+    const dateSlot = {
+      startDate: new Date(startDate),
+      endDate: new Date(endDate)
+    };
 
     const bookingId = generateNumericBookingId();
 
@@ -65,8 +97,8 @@ export async function handleTreckBooking(req, res) {
       paymentId,
       amountPaid,
       mobileNumber,
-      paymentStatus : 'paid',
-      bookingStatus : 'upcoming',
+      paymentScreenshot,
+      bookingStatus : 'pending',
     });
 
     console.log("New booking created:", newBooking);
@@ -79,5 +111,124 @@ export async function handleTreckBooking(req, res) {
   } catch (err) {
     console.error("Booking error:", err);
     return res.status(500).json({ error: "Server error while booking trip." });
+  }
+}
+
+// Get all bookings for a specific destination (Admin only)
+export async function getDestinationBookings(req, res) {
+  console.log("Request to get destination bookings received");
+  
+  try {
+    const { destinationId } = req.params;
+
+    if (!destinationId) {
+      return res.status(400).json({ error: "Destination ID is required!" });
+    }
+
+    console.log("Fetching bookings for destination:", destinationId);
+
+    // Fetch all bookings for this destination and populate user details
+    const bookings = await Booking.find({ destinationId })
+      .populate({
+        path: 'userId',
+        select: 'name email',
+        options: { strictPopulate: false }
+      })
+      .populate({
+        path: 'destinationId',
+        select: 'name location',
+        options: { strictPopulate: false }
+      })
+      .sort({ createdAt: -1 })
+      .lean();
+
+    console.log(`Found ${bookings.length} bookings for destination ${destinationId}`);
+
+    return res.status(200).json({
+      msg: "Bookings fetched successfully!",
+      data: bookings
+    });
+
+  } catch (err) {
+    console.error("Error fetching bookings:", err);
+    console.error("Error details:", err.message);
+    console.error("Stack trace:", err.stack);
+    return res.status(500).json({ error: "Server error while fetching bookings.", details: err.message });
+  }
+}
+
+// Get all bookings for a specific user
+export async function getUserBookings(req, res) {
+  console.log("Request to get user bookings received");
+  
+  try {
+    const { userId } = req.params;
+
+    if (!userId) {
+      return res.status(400).json({ error: "User ID is required!" });
+    }
+
+    console.log("Fetching bookings for user:", userId);
+
+    // Fetch all bookings for this user
+    const bookings = await Booking.find({ userId })
+      .populate({
+        path: 'destinationId',
+        select: 'name location price',
+        options: { strictPopulate: false }
+      })
+      .sort({ createdAt: -1 })
+      .lean();
+
+    console.log(`Found ${bookings.length} bookings for user ${userId}`);
+
+    return res.status(200).json({
+      msg: "Bookings fetched successfully!",
+      data: bookings
+    });
+
+  } catch (err) {
+    console.error("Error fetching user bookings:", err);
+    return res.status(500).json({ error: "Server error while fetching bookings." });
+  }
+}
+
+// Update booking status (Admin only)
+export async function updateBookingStatus(req, res) {
+  console.log("Request to update booking status received");
+  
+  try {
+    const { bookingId } = req.params;
+    const { bookingStatus } = req.body;
+
+    if (!bookingId) {
+      return res.status(400).json({ error: "Booking ID is required!" });
+    }
+
+    if (!bookingStatus) {
+      return res.status(400).json({ error: "Booking status is required!" });
+    }
+
+    const updatedBooking = await Booking.findByIdAndUpdate(
+      bookingId,
+      { bookingStatus },
+      { new: true, runValidators: true }
+    ).populate('userId', 'name email')
+     .populate('destinationId', 'name location');
+
+    if (!updatedBooking) {
+      return res.status(404).json({ error: "Booking not found!" });
+    }
+
+    console.log("Booking updated:", updatedBooking);
+
+    return res.status(200).json({
+      msg: "Booking status updated successfully!",
+      data: updatedBooking
+    });
+
+  } catch (err) {
+    console.error("Error updating booking status:", err);
+    return res.status(500).json({ error: "Server error while updating booking status." });
   }
 }

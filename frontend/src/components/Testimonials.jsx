@@ -4,27 +4,27 @@ import { Star, Quote } from 'lucide-react';
 const testimonials = [
   {
     id: 1,
-    name: "Priya Sharma",
+    name: "Priya Deshmukh",
     location: "Mumbai",
     rating: 5,
-    text: "The Roopkund trek was absolutely magical! The guides were incredibly knowledgeable about the local culture and ensured our safety throughout. The views were beyond words!",
-    trek: "Roopkund Trek"
+    text: "The Kalsubai trek was absolutely breathtaking! Being on Maharashtra's highest peak at sunrise was magical. The guides were knowledgeable about the history and ensured everyone's safety. Highly recommend!",
+    trek: "Kalsubai Peak Trek"
   },
   {
     id: 2,
-    name: "Rahul Mehta",
-    location: "Delhi",
+    name: "Rahul Patil",
+    location: "Pune",
     rating: 5,
-    text: "Valley of Flowers exceeded all expectations. The professional organization and attention to detail made this once-in-a-lifetime experience truly unforgettable.",
-    trek: "Valley of Flowers"
+    text: "Rajgad fort trek exceeded all expectations! The monsoon views were spectacular and the professional organization made this experience truly unforgettable. The Maratha history shared by guides was fascinating.",
+    trek: "Rajgad Fort Trek"
   },
   {
     id: 3,
-    name: "Anjali Patel",
-    location: "Bangalore",
+    name: "Sneha Kulkarni",
+    location: "Nashik",
     rating: 5,
-    text: "The Chadar Trek was the most challenging yet rewarding experience of my life. The team's expertise in extreme conditions was remarkable. Highly recommended!",
-    trek: "Chadar Trek"
+    text: "The Harishchandragad trek was challenging yet incredibly rewarding. The Konkan Kada cliff is stunning! Team's expertise and the bonfire at night made it a perfect weekend adventure.",
+    trek: "Harishchandragad Trek"
   }
 ];
 
@@ -37,7 +37,7 @@ const Testimonials = () => {
             What <span className="text-orange-600">Trekkers Say</span>
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Real experiences from adventurers who have explored India's magnificent trails with us
+            Real experiences from adventurers who have explored Maharashtra's magnificent Sahyadri trails with us
           </p>
         </div>
 
@@ -63,6 +63,49 @@ const Testimonials = () => {
               </div>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* From the Founders Section */}
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-20 pb-12">
+        <div className="bg-white rounded-2xl shadow-lg border-2 border-gray-200 p-8 md:p-12">
+          <div className="text-center mb-6">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
+              From the <span className="text-orange-600">Founders</span>
+            </h2>
+            <div className="w-24 h-1 bg-orange-600 mx-auto rounded-full"></div>
+          </div>
+          
+          <div className="space-y-4 text-gray-700 leading-relaxed text-lg">
+            <p>
+              Namaste, fellow adventurers!
+            </p>
+            
+            <p>
+              At <span className="font-semibold text-gray-900">Trekora</span>, we believe that the mountains are not just destinations—they're transformative experiences that shape who we are. Born from a deep love for Maharashtra's stunning Sahyadri ranges, we've dedicated ourselves to making these incredible landscapes accessible to everyone.
+            </p>
+            
+            <p>
+              What started as weekend treks with friends has grown into a community of passionate trekkers who share our vision: to explore responsibly, trek safely, and preserve the natural beauty of our beloved Maharashtra for generations to come.
+            </p>
+            
+            <p className="font-semibold text-gray-900">
+              Every trail we choose, every route we plan, and every safety measure we implement comes from years of experience and an unwavering commitment to your adventure and well-being.
+            </p>
+            
+            <p>
+              We're not just trek organizers—we're your companions on this incredible journey. Let's create memories that last a lifetime!
+            </p>
+            
+            <div className="mt-8 pt-6 border-t border-gray-200 text-center">
+              <p className="font-bold text-xl text-gray-900">
+                Happy Trekking! 🏔️
+              </p>
+              <p className="mt-2 italic text-gray-600">
+                - The Trekora Team
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </section>

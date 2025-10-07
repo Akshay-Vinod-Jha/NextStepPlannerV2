@@ -11,17 +11,31 @@ export const Card = ({destination})=>{
     navigate("/destinationdetails" , {state : destination})
   }
     console.log(destination);
+    const isAvailable = destination.status === 'available';
+    
     return (
         <div 
               key={destination.id}
-              className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
+              className={`bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 ${!isAvailable ? 'opacity-90' : ''}`}
             >
               <div className="relative overflow-hidden">
                 <img 
                   src={destination.images[0].url} 
                   alt={destination.name}
-                  className="w-full h-64 object-cover transition-transform duration-300 hover:scale-110"
+                  className={`w-full h-64 object-cover transition-transform duration-300 hover:scale-110 ${!isAvailable ? 'grayscale-[30%]' : ''}`}
                 />
+                {/* Status Badge - Top Left */}
+                <div className="absolute top-4 left-4">
+                  <div className={`px-3 py-1 rounded-full flex items-center space-x-1 font-semibold text-xs uppercase backdrop-blur-sm ${
+                    isAvailable 
+                      ? 'bg-green-500/90 text-white' 
+                      : 'bg-red-500/90 text-white'
+                  }`}>
+                    <span>{isAvailable ? 'Available' : 'Unavailable'}</span>
+                  </div>
+                </div>
+                
+                {/* Price Badge - Top Right */}
                 <div className="absolute top-4 right-4">
                   <div className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full flex items-center space-x-1">
                     <IndianRupee className="h-4 w-4 text-orange-600" />
@@ -81,10 +95,16 @@ export const Card = ({destination})=>{
                 </div>
                 
                 <div className="flex space-x-2">
-                  <button className="flex-1 bg-orange-600 hover:bg-orange-700 text-white py-3 rounded-lg font-semibold transition-colors duration-300"
-                    onClick={navigateViewDetailsHandler}
+                  <button 
+                    className={`flex-1 py-3 rounded-lg font-semibold transition-colors duration-300 ${
+                      isAvailable 
+                        ? 'bg-orange-600 hover:bg-orange-700 text-white cursor-pointer' 
+                        : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                    }`}
+                    onClick={isAvailable ? navigateViewDetailsHandler : null}
+                    disabled={!isAvailable}
                   >
-                    Book Now
+                    {isAvailable ? 'Book Now' : 'Currently Unavailable'}
                   </button>
                   {/* <button className="flex-1 border-2 border-orange-600 text-orange-600 hover:bg-orange-600 hover:text-white py-3 rounded-lg font-semibold transition-colors duration-300"
                 

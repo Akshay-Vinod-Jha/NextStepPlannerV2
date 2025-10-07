@@ -110,7 +110,7 @@ const SignUpForm = () => {
           <div className="bg-gradient-to-r from-orange-600 to-red-600 px-8 py-5 text-center">
             <div className="flex items-center justify-center space-x-2 mb-2">
               <Mountain className="h-8 w-8 text-white" />
-              <span className="text-2xl font-bold text-white">NisargPath</span>
+              <span className="text-2xl font-bold text-white">Trekora</span>
             </div>
             <h2 className="text-xl font-semibold text-orange-100">Join Our Community</h2>
             <p className="text-orange-200 text-sm mt-1">Start your adventure today</p>
