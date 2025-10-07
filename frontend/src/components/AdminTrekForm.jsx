@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { getApiUrl } from '../config/config.js';
 
 const AdminTrekForm = () => {
   const navigate = useNavigate();
@@ -112,7 +113,7 @@ const AdminTrekForm = () => {
 
   // Make API request
   try {
-    const response = await fetch("http://localhost:5001/destinations/adddestn", {
+    const response = await fetch(getApiUrl("/destinations/adddestn"), {
       method: "POST",
       body: data,
     });

@@ -63,7 +63,7 @@
 //   const handleUserLogOut = async ()=>{
 //     console.log("Logging out user...");
 //     try{
-//       const response = await axios.post("http://localhost:5001/user/logout", {}, { withCredentials: true });
+//       const response = await axios.post(getApiUrl("/user/logout"), {}, { withCredentials: true });
 
 //       console.log("Logout response:", response);
 
@@ -292,6 +292,7 @@ import { setIsAdmin, setIsAuthenticated } from "../Features/roleSlice.js"; // As
 import { toast } from "react-toastify";
 import { set } from "mongoose";
 import logo from "../assets/trekora1.png";
+import { getApiUrl } from "../config/config.js";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -349,7 +350,7 @@ const Header = () => {
       setIsLoading(true);
       try {
         const response = await axios.post(
-          "http://localhost:5001/gettokendetails",
+          getApiUrl("/gettokendetails"),
           {},
           { withCredentials: true }
         );

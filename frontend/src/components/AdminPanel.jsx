@@ -5,6 +5,7 @@ import { useState ,useEffect} from 'react';
 import { AdminCard } from './AdminCard';
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import { getApiUrl } from '../config/config.js';
 
 
 const AdminPanel = () => {
@@ -15,7 +16,7 @@ const AdminPanel = () => {
    useEffect(() => {
     const getAllDestHandler = async () => {
       try {
-        const response = await axios.get('http://localhost:5001/destinations/all');
+        const response = await axios.get(getApiUrl('/destinations/all'));
         setDestinations(response.data);
       } catch (error) {
         console.error('Error fetching recent destinations:', error);

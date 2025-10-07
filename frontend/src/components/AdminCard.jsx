@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { MapPin, Clock, Users, Star, IndianRupee, Edit, Calendar, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { getApiUrl } from '../config/config.js';
 
 export const AdminCard = ({destination}) => {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ export const AdminCard = ({destination}) => {
   const handleConfirmDelete =async () => {
     console.log('Deleting destination:', destination.id);
     try {
-    const response = await fetch(`http://localhost:5001/destinations/deletedestn/${destination._id}`, {
+    const response = await fetch(getApiUrl(`/destinations/deletedestn/${destination._id}`), {
       method: "DELETE",
     });
 

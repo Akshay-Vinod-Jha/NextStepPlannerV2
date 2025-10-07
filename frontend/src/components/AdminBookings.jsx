@@ -3,6 +3,7 @@ import { Search, ArrowLeft, Eye, X, Image as ImageIcon, CheckCircle, XCircle } f
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import { getApiUrl } from '../config/config.js';
 
 const AdminBookings = () => {
   const location = useLocation();
@@ -35,7 +36,7 @@ const AdminBookings = () => {
       try {
         setLoading(true);
         const response = await axios.get(
-          `http://localhost:5001/booking/destination/${destination._id}`,
+          getApiUrl(`/booking/destination/${destination._id}`),
           { withCredentials: true }
         );
         
@@ -80,7 +81,7 @@ const AdminBookings = () => {
   const handleUpdateStatus = async (bookingId, bookingStatus) => {
     try {
       const response = await axios.patch(
-        `http://localhost:5001/booking/update/${bookingId}`,
+        getApiUrl(`/booking/update/${bookingId}`),
         { bookingStatus },
         { withCredentials: true }
       );
