@@ -60,7 +60,6 @@
 //     fetchUserRole();
 //   }, [dispatch, isAuthenticated]);
 
-
 //   const handleUserLogOut = async ()=>{
 //     console.log("Logging out user...");
 //     try{
@@ -90,8 +89,6 @@
 //   }
 // };
 
-
-
 //   // Close dropdown when clicking outside
 //   useEffect(() => {
 //     const handleClickOutside = (event) => {
@@ -104,9 +101,6 @@
 //       document.removeEventListener("mousedown", handleClickOutside);
 //     };
 //   }, []);
-
-
-
 
 //   // Common NavLink class function
 //   const navLinkClass = ({ isActive }) =>
@@ -166,7 +160,7 @@
 //       </div>
 //     </div>
 //   );
-  
+
 //   // Renders all navigation items for both desktop and mobile
 //   const renderNavItems = (isMobile = false) => (
 //     <>
@@ -190,7 +184,7 @@
 //           {/* Desktop Navigation */}
 //           <nav className="hidden md:flex items-center space-x-8">
 //             {renderNavItems()}
-            
+
 //             {isLoading && <div className="w-20 h-10 bg-gray-200 rounded-full animate-pulse"></div>}
 
 //             {!isLoading && (
@@ -235,10 +229,10 @@
 //           <div className="md:hidden py-4 border-t border-gray-200">
 //             <nav className="flex flex-col space-y-4">
 //               {renderNavItems(true)}
-              
+
 //               <div className="border-t border-gray-200 pt-4 flex flex-col items-start space-y-4">
 //                 {isLoading && <div className="w-28 h-10 bg-gray-200 rounded-full animate-pulse self-start"></div>}
-                
+
 //                 {!isLoading && (
 //                   <>
 //                     { (userRole === 'USER' || !userRole) && !(userRole === 'ADMIN' || isAdmin) && (
@@ -279,11 +273,18 @@
 
 // export default Header;
 
-
-
-
 import React, { useState, useEffect, useRef } from "react";
-import { Menu, X, Mountain, Settings, User, LogOut, UserCog, History, ChevronDown } from "lucide-react";
+import {
+  Menu,
+  X,
+  Mountain,
+  Settings,
+  User,
+  LogOut,
+  UserCog,
+  History,
+  ChevronDown,
+} from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
@@ -299,16 +300,20 @@ const Header = () => {
 
   const currentRoute = location.pathname;
   const isHomePage = currentRoute === "/";
-  
+
   // Scroll state for home page
   const [isScrolled, setIsScrolled] = useState(false);
 
   // Dynamic navbar styling based on page and scroll state
-  const navBgColour = isHomePage 
-    ? (isScrolled ? "bg-white/95" : "bg-slate-80/90") 
+  const navBgColour = isHomePage
+    ? isScrolled
+      ? "bg-white/95"
+      : "bg-slate-80/90"
     : "bg-gray-50";
-  const navItemsColour = isHomePage 
-    ? (isScrolled ? "text-gray-800" : "text-gray-200") 
+  const navItemsColour = isHomePage
+    ? isScrolled
+      ? "text-gray-800"
+      : "text-gray-200"
     : "text-gray-800";
 
   // State management
@@ -318,8 +323,8 @@ const Header = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   // Redux state
-  const isAdmin = useSelector(state => state.role.isAdmin);
-  const isAuthenticated = useSelector(state => state.role.isAuthenticated);
+  const isAdmin = useSelector((state) => state.role.isAdmin);
+  const isAuthenticated = useSelector((state) => state.role.isAuthenticated);
 
   // Scroll event listener for home page only
   useEffect(() => {
@@ -333,8 +338,8 @@ const Header = () => {
       setIsScrolled(scrollPosition > 690);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, [isHomePage]);
 
   // Fetch user role from token on component mount
@@ -355,7 +360,7 @@ const Header = () => {
           console.log("Current isAuthenticated from Redux:", isAuthenticated);
           // Sync redux state if needed
           dispatch(setIsAuthenticated(true));
-          if(response.data.role === 'ADMIN') {
+          if (response.data.role === "ADMIN") {
             console.log("Setting admin to true");
             dispatch(setIsAdmin(true));
           }
@@ -373,37 +378,37 @@ const Header = () => {
     fetchUserRole();
   }, [dispatch, isAuthenticated]);
 
-
-  const handleUserLogOut = async ()=>{
+  const handleUserLogOut = async () => {
     console.log("Logging out user...");
-    try{
-      const response = await axios.post("http://localhost:5001/user/logout", {}, { withCredentials: true });
+    try {
+      const response = await axios.post(
+        "http://localhost:5001/user/logout",
+        {},
+        { withCredentials: true }
+      );
 
       console.log("Logout response:", response);
 
-      if(response.status === 200) {
-
+      if (response.status === 200) {
         console.log("User logged out successfully");
         dispatch(setIsAuthenticated(false));
         dispatch(setIsAdmin(false));
         setUserRole(null);
         setIsDropdownOpen(false);
-         toast.success("Logged out successfully");
+        toast.success("Logged out successfully");
         navigate("/");
       }
     } catch (error) {
-    console.error("Logout failed:", error);
-    // Still log out on client-side even if server fails
-    dispatch(setIsAuthenticated(false));
-    dispatch(setIsAdmin(false));
-    setUserRole(null);
-    setIsDropdownOpen(false);
-    toast.error("Logout failed, please try again");
-    navigate("/");
-  }
-};
-
-
+      console.error("Logout failed:", error);
+      // Still log out on client-side even if server fails
+      dispatch(setIsAuthenticated(false));
+      dispatch(setIsAdmin(false));
+      setUserRole(null);
+      setIsDropdownOpen(false);
+      toast.error("Logout failed, please try again");
+      navigate("/");
+    }
+  };
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -418,9 +423,6 @@ const Header = () => {
     };
   }, []);
 
-
-
-
   // Common NavLink class function
   const navLinkClass = ({ isActive }) =>
     `${
@@ -433,7 +435,7 @@ const Header = () => {
       <div className="py-1">
         <button
           onClick={() => {
-            navigate('/profile'); // Assuming a profile page route
+            navigate("/profile"); // Assuming a profile page route
             setIsDropdownOpen(false);
           }}
           className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
@@ -442,10 +444,10 @@ const Header = () => {
           <span>Your Profile</span>
         </button>
 
-        { (userRole === 'ADMIN' || isAdmin) && (
+        {(userRole === "ADMIN" || isAdmin) && (
           <button
             onClick={() => {
-              navigate('/admin');
+              navigate("/admin");
               setIsDropdownOpen(false);
             }}
             className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
@@ -466,68 +468,118 @@ const Header = () => {
       </div>
     </div>
   );
-  
+
   // Renders all navigation items for both desktop and mobile
   const renderNavItems = (isMobile = false) => (
     <>
-      <NavLink to="/" className={navLinkClass}>Home</NavLink>
-      <NavLink to="/destinations" className={navLinkClass}>Destinations</NavLink>
-      <NavLink to="/services" className={navLinkClass}>Services</NavLink>
-      <NavLink to="/gallery" className={navLinkClass}>Gallery</NavLink>
-      <NavLink to="/contact" className={navLinkClass}>Contact</NavLink>
+      <NavLink to="/" className={navLinkClass}>
+        Home
+      </NavLink>
+      <NavLink to="/destinations" className={navLinkClass}>
+        Destinations
+      </NavLink>
+      <NavLink to="/services" className={navLinkClass}>
+        Services
+      </NavLink>
+      <NavLink to="/gallery" className={navLinkClass}>
+        Gallery
+      </NavLink>
+      <NavLink to="/contact" className={navLinkClass}>
+        Contact
+      </NavLink>
     </>
   );
 
   // Debug logging
-  console.log("Header Debug - userRole:", userRole, "isAdmin:", isAdmin, "isAuthenticated:", isAuthenticated, "isLoading:", isLoading);
+  console.log(
+    "Header Debug - userRole:",
+    userRole,
+    "isAdmin:",
+    isAdmin,
+    "isAuthenticated:",
+    isAuthenticated,
+    "isLoading:",
+    isLoading
+  );
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 ${navBgColour} backdrop-blur-md shadow-sm transition-all duration-300`}>
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 ${navBgColour} backdrop-blur-md shadow-sm transition-all duration-300`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
-          <button className="flex items-center space-x-2" onClick={() => navigate("/")}>
+          <button
+            className="flex items-center space-x-2"
+            onClick={() => navigate("/")}
+          >
             <div className="bg-white p-2 rounded-lg shadow-sm">
-              <img src={logo} alt="Trekora" className="h-10 w-auto" />
+              <img src={logo} alt="TREKORA" className="h-12 w-auto" />
             </div>
-            <span className={`text-2xl font-bold ${isHomePage ? (isScrolled ? 'text-gray-800' : 'text-gray-200') : 'text-gray-800'} hover:text-orange-600`}>Trekora</span>
+            <span
+              className={`text-2xl font-bold ${
+                isHomePage
+                  ? isScrolled
+                    ? "text-gray-800"
+                    : "text-gray-200"
+                  : "text-gray-800"
+              } hover:text-orange-600`}
+            >
+              TREKORA
+            </span>
           </button>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
             {renderNavItems()}
-            
-            {isLoading && <div className="w-20 h-10 bg-gray-200 rounded-full animate-pulse"></div>}
+
+            {isLoading && (
+              <div className="w-20 h-10 bg-gray-200 rounded-full animate-pulse"></div>
+            )}
 
             {!isLoading && (
               <>
-                { (userRole === 'USER' || !userRole) && !(userRole === 'ADMIN' || isAdmin) && (
-                  <button onClick={() => navigate("/destinations")} className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-full font-semibold transition-colors duration-300">
-                    Book Now
-                  </button>
-                )}
+                {(userRole === "USER" || !userRole) &&
+                  !(userRole === "ADMIN" || isAdmin) && (
+                    <button
+                      onClick={() => navigate("/destinations")}
+                      className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-full font-semibold transition-colors duration-300"
+                    >
+                      Book Now
+                    </button>
+                  )}
 
-                { (userRole === 'ADMIN' || isAdmin) && (
-                  <button onClick={() => {
-                    console.log("Desktop Manage Treks clicked");
-                    navigate("/admin");
-                  }} className="flex items-center bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-full font-semibold transition-colors duration-300">
+                {(userRole === "ADMIN" || isAdmin) && (
+                  <button
+                    onClick={() => {
+                      console.log("Desktop Manage Treks clicked");
+                      navigate("/admin");
+                    }}
+                    className="flex items-center bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-full font-semibold transition-colors duration-300"
+                  >
                     <Settings className="h-5 w-5 mr-2" />
                     Manage Treks
                   </button>
                 )}
 
-                { !userRole && !isAuthenticated ? (
-                  <button onClick={() => navigate("/signin")} className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-full font-semibold transition-colors duration-300">
+                {!userRole && !isAuthenticated ? (
+                  <button
+                    onClick={() => navigate("/signin")}
+                    className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-full font-semibold transition-colors duration-300"
+                  >
                     Sign In
                   </button>
                 ) : (
                   <div className="relative" ref={dropdownRef}>
                     <button
-                      onClick={() => setIsDropdownOpen(prev => !prev)}
+                      onClick={() => setIsDropdownOpen((prev) => !prev)}
                       className="flex items-center p-2 rounded-full bg-orange-50 hover:bg-orange-200 transition-colors"
                     >
                       <User className="h-5 w-5 text-gray-700" />
-                      <ChevronDown className={`h-4 w-4 text-gray-600 ml-1 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
+                      <ChevronDown
+                        className={`h-4 w-4 text-gray-600 ml-1 transition-transform ${
+                          isDropdownOpen ? "rotate-180" : ""
+                        }`}
+                      />
                     </button>
                     {isDropdownOpen && <UserDropdown />}
                   </div>
@@ -541,7 +593,11 @@ const Header = () => {
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="md:hidden p-2 rounded-md text-gray-700 hover:text-orange-600 hover:bg-gray-100"
           >
-            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            {isMenuOpen ? (
+              <X className="h-6 w-6" />
+            ) : (
+              <Menu className="h-6 w-6" />
+            )}
           </button>
         </div>
 
@@ -550,39 +606,54 @@ const Header = () => {
           <div className="md:hidden py-4 border-t border-gray-200">
             <nav className="flex flex-col space-y-4">
               {renderNavItems(true)}
-              
+
               <div className="border-t border-gray-200 pt-4 flex flex-col items-start space-y-4">
-                {isLoading && <div className="w-28 h-10 bg-gray-200 rounded-full animate-pulse self-start"></div>}
-                
+                {isLoading && (
+                  <div className="w-28 h-10 bg-gray-200 rounded-full animate-pulse self-start"></div>
+                )}
+
                 {!isLoading && (
                   <>
-                    { (userRole === 'USER' || !userRole) && !(userRole === 'ADMIN' || isAdmin) && (
-                      <button onClick={() => navigate("/destinations")} className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-full font-semibold transition-colors duration-300 self-start">
-                        Book Now
-                      </button>
-                    )}
-                    { (userRole === 'ADMIN' || isAdmin) && (
-                      <button onClick={() => navigate("/admin")}
-                       className="flex items-center bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-full font-semibold transition-colors duration-300 self-start">
+                    {(userRole === "USER" || !userRole) &&
+                      !(userRole === "ADMIN" || isAdmin) && (
+                        <button
+                          onClick={() => navigate("/destinations")}
+                          className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-full font-semibold transition-colors duration-300 self-start"
+                        >
+                          Book Now
+                        </button>
+                      )}
+                    {(userRole === "ADMIN" || isAdmin) && (
+                      <button
+                        onClick={() => navigate("/admin")}
+                        className="flex items-center bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-full font-semibold transition-colors duration-300 self-start"
+                      >
                         <Settings className="h-5 w-5 mr-2" />
                         Manage Treks
                       </button>
                     )}
-                    { !userRole && !isAuthenticated ? (
-                      <button onClick={() => navigate("/signin")} className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-full font-semibold transition-colors duration-300 self-start">
+                    {!userRole && !isAuthenticated ? (
+                      <button
+                        onClick={() => navigate("/signin")}
+                        className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-full font-semibold transition-colors duration-300 self-start"
+                      >
                         Sign In
                       </button>
                     ) : (
                       <div className="relative w-full" ref={dropdownRef}>
                         <button
-                          onClick={() => setIsDropdownOpen(prev => !prev)}
+                          onClick={() => setIsDropdownOpen((prev) => !prev)}
                           className="flex items-center justify-between w-full p-2 rounded-md bg-orange-50 hover:bg-orange-200 transition-colors text-left"
                         >
                           <span className="fle items-center">
                             <User className="h-5 w-5 text-gray-700 mr-2" />
                             Profile Options
                           </span>
-                          <ChevronDown className={`h-5 w-5 text-gray-600 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
+                          <ChevronDown
+                            className={`h-5 w-5 text-gray-600 transition-transform ${
+                              isDropdownOpen ? "rotate-180" : ""
+                            }`}
+                          />
                         </button>
                         {isDropdownOpen && <UserDropdown />}
                       </div>
