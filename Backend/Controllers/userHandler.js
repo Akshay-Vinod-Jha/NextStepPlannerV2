@@ -43,8 +43,8 @@ export const handlsUserSignIn = async (req, res) => {
     .status(200)
     .cookie("token", token, {
       httpOnly: true,
-      secure: false,
-      sameSite: "Lax",
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
       maxAge: 72 * 60 * 60 * 1000,
     })
     .json({ msg: "Sign In succedded", role: user.role });
