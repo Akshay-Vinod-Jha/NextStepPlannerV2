@@ -290,7 +290,6 @@ import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { setIsAdmin, setIsAuthenticated } from "../Features/roleSlice.js"; // Assuming you have these actions
 import { toast } from "react-toastify";
-import { set } from "mongoose";
 import logo from "../assets/trekora1.png";
 import { getApiUrl } from "../config/config.js";
 
@@ -383,7 +382,7 @@ const Header = () => {
     console.log("Logging out user...");
     try {
       const response = await axios.post(
-        "http://localhost:5001/user/logout",
+        getApiUrl("/user/logout"),
         {},
         { withCredentials: true }
       );

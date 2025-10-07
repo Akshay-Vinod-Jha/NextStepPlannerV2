@@ -14,7 +14,6 @@ import {
   Image,
 } from "lucide-react";
 import { toast } from "react-toastify";
-import Destination from "../../../Backend/Models/destination";
 import { getApiUrl } from '../config/config.js';
 
 const EditTrekForm = () => {
