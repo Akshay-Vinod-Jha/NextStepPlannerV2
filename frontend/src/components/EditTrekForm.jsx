@@ -14,13 +14,15 @@ import {
   Image,
 } from "lucide-react";
 import { toast } from "react-toastify";
-import { getApiUrl } from '../config/config.js';
+import { getApiUrl } from "../config/config.js";
 
 const EditTrekForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const destination = location.state; // Direct access since you're passing destination as state
-  const [destinationImages,setDestinationImages] = useState(destination.images);
+  const [destinationImages, setDestinationImages] = useState(
+    destination.images
+  );
   const [formData, setFormData] = useState({
     name: "",
     location: "",
@@ -60,7 +62,7 @@ const EditTrekForm = () => {
         oldImages: destinationImages,
       });
     }
-  }, [destination,destinationImages]);
+  }, [destination, destinationImages]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -87,11 +89,10 @@ const EditTrekForm = () => {
   };
   const removeOldImage = (id) => {
     console.log(destinationImages);
-    console.log("id : ",id);
+    console.log("id : ", id);
     const temp = destinationImages.filter((image) => id != image._id);
     setDestinationImages(temp);
     console.log(destinationImages);
-
   };
 
   const addTripDate = () => {
@@ -559,7 +560,8 @@ const EditTrekForm = () => {
                   <option value="unavailable">Unavailable</option>
                 </select>
                 <p className="mt-2 text-sm text-gray-500">
-                  Set to "Unavailable" to prevent bookings while keeping the trek visible
+                  Set to "Unavailable" to prevent bookings while keeping the
+                  trek visible
                 </p>
               </div>
             </div>
