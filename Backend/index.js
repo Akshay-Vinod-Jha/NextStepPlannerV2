@@ -51,6 +51,16 @@ const startServer = async () => {
       })
     );
 
+    // Health check route
+    app.get("/health", (req, res) => {
+      res.json({ 
+        status: "OK", 
+        environment: process.env.NODE_ENV,
+        frontend_url: process.env.FRONTEND_URL,
+        timestamp: new Date().toISOString()
+      });
+    });
+
     //user Routes
     app.use("/user", userRouter);
 
