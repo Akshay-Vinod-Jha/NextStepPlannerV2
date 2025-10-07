@@ -1,83 +1,94 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
-  Plus, X, Upload, Calendar, MapPin, Mountain,
-  Truck, IndianRupee, Clock, FileText, Image
-} from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import { getApiUrl } from '../config/config.js';
+  Plus,
+  X,
+  Upload,
+  Calendar,
+  MapPin,
+  Mountain,
+  Truck,
+  IndianRupee,
+  Clock,
+  FileText,
+  Image,
+} from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { getApiUrl } from "../config/config.js";
 
 const AdminTrekForm = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    name: '',
-    location: '',
-    description: '',
+    name: "",
+    location: "",
+    description: "",
     images: [],
-    dates: [{ id: '1', startDate: '', endDate: '' }],
-    duration: '',
-    price: '',
-    transportMode: '',
-    status: 'available'
+    dates: [{ id: "1", startDate: "", endDate: "" }],
+    duration: "",
+    price: "",
+    transportMode: "",
+    status: "available",
   });
 
   const [dragActive, setDragActive] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleImageUpload = (files) => {
     if (files) {
-      const newImages = Array.from(files).filter(file => file.type.startsWith('image/'));
-      setFormData(prev => ({
+      const newImages = Array.from(files).filter((file) =>
+        file.type.startsWith("image/")
+      );
+      setFormData((prev) => ({
         ...prev,
-        images: [...prev.images, ...newImages]
+        images: [...prev.images, ...newImages],
       }));
     }
   };
 
   const removeImage = (index) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      images: prev.images.filter((_, i) => i !== index)
+      images: prev.images.filter((_, i) => i !== index),
     }));
   };
 
   const addTripDate = () => {
     const newId = Date.now().toString();
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      dates: [...prev.dates, { id: newId, startDate: '', endDate: '' }]
+      dates: [...prev.dates, { id: newId, startDate: "", endDate: "" }],
     }));
   };
 
   const removeTripDate = (id) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      dates: prev.dates.filter(date => date.id !== id)
+      dates: prev.dates.filter((date) => date.id !== id),
     }));
   };
 
   const updateTripDate = (id, field, value) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      dates: prev.dates.map(date =>
+      dates: prev.dates.map((date) =>
         date.id === id ? { ...date, [field]: value } : date
-      )
+      ),
     }));
   };
 
   const handleDrag = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    if (e.type === 'dragenter' || e.type === 'dragover') {
+    if (e.type === "dragenter" || e.type === "dragover") {
       setDragActive(true);
-    } else if (e.type === 'dragleave') {
+    } else if (e.type === "dragleave") {
       setDragActive(false);
     }
   };
@@ -90,50 +101,54 @@ const AdminTrekForm = () => {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  const data = new FormData();
+    const data = new FormData();
 
-  // Append basic fields
-  data.append("name", formData.name);
-  data.append("location", formData.location);
-  data.append("description", formData.description);
-  data.append("duration", formData.duration);
-  data.append("price", formData.price);
-  data.append("transportMode", formData.transportMode);
-  data.append("status", formData.status);
+    // Append basic fields
+    data.append("name", formData.name);
+    data.append("location", formData.location);
+    data.append("description", formData.description);
+    data.append("duration", formData.duration);
+    data.append("price", formData.price);
+    data.append("transportMode", formData.transportMode);
+    data.append("status", formData.status);
 
-  // Append all images
-  formData.images.forEach((image) => {
-    data.append("images", image); // multiple files can be appended under same key
-  });
-
-  // Convert and append dates array as JSON string
-  data.append("dates", JSON.stringify(formData.dates.map(({ startDate, endDate }) => ({ startDate, endDate }))));
-
-  // Make API request
-  try {
-    const response = await fetch(getApiUrl("/destinations/adddestn"), {
-      method: "POST",
-      body: data,
+    // Append all images
+    formData.images.forEach((image) => {
+      data.append("images", image); // multiple files can be appended under same key
     });
 
-    const result = await response.json();
-    if (response.ok) {
-      toast.success("Trek added successfully!");
-      navigate('/destinations')
-      // Optional: resetFormData()
-    } else {
-      toast.error("Error");
+    // Convert and append dates array as JSON string
+    data.append(
+      "dates",
+      JSON.stringify(
+        formData.dates.map(({ startDate, endDate }) => ({ startDate, endDate }))
+      )
+    );
+
+    // Make API request
+    try {
+      const response = await fetch(getApiUrl("/destinations/adddestn"), {
+        method: "POST",
+        body: data,
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        toast.success("Trek added successfully!");
+        navigate("/destinations");
+        // Optional: resetFormData()
+      } else {
+        toast.error("Error");
+      }
+    } catch (err) {
+      console.error("Error submitting trek:", err);
+      toast.error("An error occurred while submitting the trek.");
     }
+  };
 
-  } catch (err) {
-    console.error("Error submitting trek:", err);
-    toast.error("An error occurred while submitting the trek.");
-  }
-};
-
-return (
+  return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
@@ -143,7 +158,9 @@ return (
               <Mountain className="h-8 w-8 text-white" />
               <div>
                 <h1 className="text-3xl font-bold text-white">Add New Trek</h1>
-                <p className="text-orange-100">Upload trekking details for Trekora</p>
+                <p className="text-orange-100">
+                  Upload trekking details for Trekora
+                </p>
               </div>
             </div>
           </div>
@@ -206,12 +223,12 @@ return (
                 <Image className="h-5 w-5 text-orange-600 mr-2" />
                 Trek Images
               </label>
-              
+
               <div
                 className={`border-2 border-dashed rounded-lg p-8 text-center transition-all duration-300 ${
-                  dragActive 
-                    ? 'border-orange-600 bg-orange-50' 
-                    : 'border-gray-300 hover:border-orange-400 hover:bg-gray-50'
+                  dragActive
+                    ? "border-orange-600 bg-orange-50"
+                    : "border-gray-300 hover:border-orange-400 hover:bg-gray-50"
                 }`}
                 onDragEnter={handleDrag}
                 onDragLeave={handleDrag}
@@ -219,7 +236,9 @@ return (
                 onDrop={handleDrop}
               >
                 <Upload className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-600 mb-2">Drag and drop images here, or</p>
+                <p className="text-gray-600 mb-2">
+                  Drag and drop images here, or
+                </p>
                 <label className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-lg cursor-pointer transition-colors duration-300">
                   Browse Files
                   <input
@@ -230,7 +249,9 @@ return (
                     onChange={(e) => handleImageUpload(e.target.files)}
                   />
                 </label>
-                <p className="text-sm text-gray-500 mt-2">PNG, JPG, JPEG up to 10MB each</p>
+                <p className="text-sm text-gray-500 mt-2">
+                  PNG, JPG, JPEG up to 10MB each
+                </p>
               </div>
 
               {/* Image Preview */}
@@ -277,7 +298,9 @@ return (
                 {formData.dates.map((tripDate, index) => (
                   <div key={tripDate.id} className="bg-gray-50 p-4 rounded-lg">
                     <div className="flex items-center justify-between mb-3">
-                      <h4 className="font-medium text-gray-900">Trip {index + 1}</h4>
+                      <h4 className="font-medium text-gray-900">
+                        Trip {index + 1}
+                      </h4>
                       {formData.dates.length > 1 && (
                         <button
                           type="button"
@@ -297,7 +320,13 @@ return (
                           type="date"
                           required
                           value={tripDate.startDate}
-                          onChange={(e) => updateTripDate(tripDate.id, 'startDate', e.target.value)}
+                          onChange={(e) =>
+                            updateTripDate(
+                              tripDate.id,
+                              "startDate",
+                              e.target.value
+                            )
+                          }
                           className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:border-orange-600 focus:ring-1 focus:ring-orange-200 transition-all duration-300"
                         />
                       </div>
@@ -309,7 +338,13 @@ return (
                           type="date"
                           required
                           value={tripDate.endDate}
-                          onChange={(e) => updateTripDate(tripDate.id, 'endDate', e.target.value)}
+                          onChange={(e) =>
+                            updateTripDate(
+                              tripDate.id,
+                              "endDate",
+                              e.target.value
+                            )
+                          }
                           className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:border-orange-600 focus:ring-1 focus:ring-orange-200 transition-all duration-300"
                         />
                       </div>
@@ -396,7 +431,8 @@ return (
                   <option value="unavailable">Unavailable</option>
                 </select>
                 <p className="mt-2 text-sm text-gray-500">
-                  Set to "Unavailable" to prevent bookings while keeping the trek visible
+                  Set to "Unavailable" to prevent bookings while keeping the
+                  trek visible
                 </p>
               </div>
             </div>
@@ -404,14 +440,13 @@ return (
             {/* Submit Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-200">
               <button
-              onClick={() => handleSubmit()}
+                onClick={() => handleSubmit()}
                 type="submit"
                 className="flex-1 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white py-4 rounded-lg font-semibold flex items-center justify-center space-x-2 transition-all duration-300 transform hover:scale-105 shadow-lg"
               >
                 <Upload className="h-5 w-5" />
                 <span>Publish Trek</span>
               </button>
-              
             </div>
           </form>
         </div>

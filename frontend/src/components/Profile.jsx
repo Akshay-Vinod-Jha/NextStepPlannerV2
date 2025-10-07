@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { User, Mail, Calendar, MapPin, Users, IndianRupee, FileText, ArrowLeft, Loader2 } from 'lucide-react';
 import { toast } from 'react-toastify';
+import { getApiUrl } from '../config/config.js';
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ const Profile = () => {
       
       // Fetch user details
       const userResponse = await axios.post(
-        'http://localhost:5001/gettokendetails',
+        getApiUrl('/gettokendetails'),
         {},
         { withCredentials: true }
       );
@@ -30,7 +31,7 @@ const Profile = () => {
         
         // Fetch user's bookings
         const bookingsResponse = await axios.get(
-          `http://localhost:5001/booking/user/${userResponse.data.userId}`,
+          getApiUrl(`/booking/user/${userResponse.data.userId}`),
           { withCredentials: true }
         );
 

@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setIsAdmin, setIsAuthenticated } from '../Features/roleSlice.js';
 import { toast } from 'react-toastify';
+import { getApiUrl } from '../config/config.js';
 
 const SignInForm = () => {
   // State updated for email instead of contactNumber
@@ -75,7 +76,7 @@ const SignInForm = () => {
 
   const handleGoogleSignIn = () => {
 
-     window.location.href = "http://localhost:5001/user/google";
+     window.location.href = getApiUrl("/user/google");
 
   };
 
@@ -89,7 +90,7 @@ const SignInForm = () => {
     try {
       console.log('Sign in data:', formData);
 
-      const response = await axios.post("http://localhost:5001/user/signin", formData, {
+      const response = await axios.post(getApiUrl("/user/signin"), formData, {
         withCredentials: true
       }, {
         headers: {

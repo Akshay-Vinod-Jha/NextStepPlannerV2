@@ -3,6 +3,7 @@ import { MapPin, Clock, Users, Star, IndianRupee } from 'lucide-react';
 import axios from "axios";
 import { Card } from './Card';
 import { useNavigate } from 'react-router-dom';
+import { getApiUrl } from '../config/config.js';
 
 const Destinations = () => {
   const navigate = useNavigate();
@@ -12,7 +13,7 @@ const Destinations = () => {
    useEffect(() => {
     const getRecentDestHandler = async () => {
       try {
-        const response = await axios.get('http://localhost:5001/destinations/recent');
+        const response = await axios.get(getApiUrl('/destinations/recent'));
         setDestinations(response.data);
       } catch (error) {
         console.error('Error fetching recent destinations:', error);

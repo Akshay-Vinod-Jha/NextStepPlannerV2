@@ -6,7 +6,8 @@ import {
 } from 'lucide-react';
 import axios from 'axios';
 import { useLocation , useNavigate } from 'react-router-dom';
-import {toast} from 'react-toastify'
+import {toast} from 'react-toastify';
+import { getApiUrl } from '../config/config.js';
 const DestinationDetails = () => {
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -62,7 +63,7 @@ const handleNavigateBookingForm = async () => {
 
   try {
     const response = await axios.post(
-      "http://localhost:5001/gettokendetails",
+      getApiUrl("/gettokendetails"),
       {}, {
         withCredentials: true 
       }

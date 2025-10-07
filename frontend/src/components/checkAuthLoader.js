@@ -1,8 +1,9 @@
 import axios from "axios";
+import { getApiUrl } from '../config/config.js';
 
 export const checkUserAuthLoader = async () => {
   try {
-    const res = await axios.post("http://localhost:5001/gettokendetails", 
+    const res = await axios.post(getApiUrl("/gettokendetails"), 
         {},
         {
       withCredentials: true, 
@@ -21,7 +22,7 @@ export const checkUserAuthLoader = async () => {
 
 export const checkAdminAuthLoader = async () => {
   try {
-    const res = await axios.post("http://localhost:5001/gettokendetails", 
+    const res = await axios.post(getApiUrl("/gettokendetails"), 
         {},
         {
       withCredentials: true,

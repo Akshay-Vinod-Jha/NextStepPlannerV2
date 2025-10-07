@@ -3,6 +3,7 @@ import { User, Mail, Lock, Eye, EyeOff, Mountain } from 'lucide-react';
 import axios from "axios";
 import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { getApiUrl } from '../config/config.js';
 
 const SignUpForm = () => {
   const navigate = useNavigate();
@@ -49,7 +50,7 @@ const SignUpForm = () => {
 
     const handleGoogleSignUp = () => {
 
-     window.location.href = "http://localhost:5001/user/google";
+     window.location.href = getApiUrl("/user/google");
 
   };
 
@@ -79,7 +80,7 @@ const SignUpForm = () => {
 
     try {
       console.log('Sign up data:', formData);
-      const response = await axios.post("http://localhost:5001/user/signup", formData, {
+      const response = await axios.post(getApiUrl("/user/signup"), formData, {
         headers: {
           "Content-Type": "application/json",
         }

@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { toast } from "react-toastify";
 import Destination from "../../../Backend/Models/destination";
+import { getApiUrl } from '../config/config.js';
 
 const EditTrekForm = () => {
   const location = useLocation();
@@ -167,7 +168,7 @@ const EditTrekForm = () => {
     try {
       // Fixed: Use destination._id instead of trek._id
       const response = await fetch(
-        `http://localhost:5001/destinations/updatedestn/${destination._id}`,
+        getApiUrl(`/destinations/updatedestn/${destination._id}`),
         {
           method: "POST",
           body: data,

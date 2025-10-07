@@ -1,9 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { Search, ArrowLeft, Eye, X, Image as ImageIcon, CheckCircle, XCircle } from 'lucide-react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import axios from 'axios';
-import { getApiUrl } from '../config/config.js';
+import React, { useState, useEffect } from "react";
+import {
+  Search,
+  ArrowLeft,
+  Eye,
+  X,
+  Image as ImageIcon,
+  CheckCircle,
+  XCircle,
+} from "lucide-react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import axios from "axios";
+import { getApiUrl } from "../config/config.js";
 
 const AdminBookings = () => {
   const location = useLocation();
@@ -12,8 +20,8 @@ const AdminBookings = () => {
 
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [bookingStatusFilter, setBookingStatusFilter] = useState('All');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [bookingStatusFilter, setBookingStatusFilter] = useState("All");
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [showImageModal, setShowImageModal] = useState(false);
@@ -22,7 +30,7 @@ const AdminBookings = () => {
   useEffect(() => {
     if (!destination) {
       toast.error("No destination selected!");
-      navigate('/admin');
+      navigate("/admin");
     }
   }, [destination, navigate]);
 
@@ -30,18 +38,18 @@ const AdminBookings = () => {
   useEffect(() => {
     const fetchBookings = async () => {
       if (!destination) return;
-      
+
       console.log("Fetching bookings for destination:", destination._id);
-      
+
       try {
         setLoading(true);
         const response = await axios.get(
           getApiUrl(`/booking/destination/${destination._id}`),
           { withCredentials: true }
         );
-        
+
         console.log("Bookings response:", response.data);
-        
+
         if (response.data?.data) {
           setBookings(response.data.data);
           console.log(`Loaded ${response.data.data.length} bookings`);
@@ -60,20 +68,22 @@ const AdminBookings = () => {
   }, [destination]);
 
   // Filter bookings
-  const filteredBookings = bookings.filter(booking => {
-    const userName = booking.userId?.name || '';
-    const userEmail = booking.userId?.email || '';
-    const bookingIdStr = booking.bookingId || '';
-    const mobileStr = booking.mobileNumber?.toString() || '';
-    
-    const matchesSearch = 
+  const filteredBookings = bookings.filter((booking) => {
+    const userName = booking.userId?.name || "";
+    const userEmail = booking.userId?.email || "";
+    const bookingIdStr = booking.bookingId || "";
+    const mobileStr = booking.mobileNumber?.toString() || "";
+
+    const matchesSearch =
       userName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       userEmail.toLowerCase().includes(searchTerm.toLowerCase()) ||
       mobileStr.includes(searchTerm) ||
       bookingIdStr.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesBookingStatus = bookingStatusFilter === 'All' || booking.bookingStatus === bookingStatusFilter;
-    
+
+    const matchesBookingStatus =
+      bookingStatusFilter === "All" ||
+      booking.bookingStatus === bookingStatusFilter;
+
     return matchesSearch && matchesBookingStatus;
   });
 
@@ -87,8 +97,8 @@ const AdminBookings = () => {
       );
 
       if (response.data?.data) {
-        setBookings(prevBookings =>
-          prevBookings.map(booking =>
+        setBookings((prevBookings) =>
+          prevBookings.map((booking) =>
             booking._id === bookingId ? response.data.data : booking
           )
         );
@@ -102,30 +112,33 @@ const AdminBookings = () => {
   };
 
   const getStatusBadge = (status) => {
-    const baseClasses = "px-3 py-1 rounded-full text-xs font-semibold uppercase";
+    const baseClasses =
+      "px-3 py-1 rounded-full text-xs font-semibold uppercase";
     const statusColors = {
-      confirmed: 'bg-green-100 text-green-800',
-      pending: 'bg-yellow-100 text-yellow-800',
-      cancelled: 'bg-red-100 text-red-800'
+      confirmed: "bg-green-100 text-green-800",
+      pending: "bg-yellow-100 text-yellow-800",
+      cancelled: "bg-red-100 text-red-800",
     };
-    return `${baseClasses} ${statusColors[status] || 'bg-gray-100 text-gray-800'}`;
+    return `${baseClasses} ${
+      statusColors[status] || "bg-gray-100 text-gray-800"
+    }`;
   };
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('en-IN', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric'
+    return new Date(dateString).toLocaleDateString("en-IN", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
     });
   };
 
   const formatDateTime = (dateString) => {
-    return new Date(dateString).toLocaleString('en-IN', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+    return new Date(dateString).toLocaleString("en-IN", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
@@ -146,26 +159,31 @@ const AdminBookings = () => {
         {/* Header */}
         <div className="mb-8">
           <button
-            onClick={() => navigate('/admin')}
+            onClick={() => navigate("/admin")}
             className="flex items-center text-orange-600 hover:text-orange-700 mb-4 font-medium transition-colors"
           >
             <ArrowLeft className="w-5 h-5 mr-2" />
             Back to Admin Panel
           </button>
-          
+
           <div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              {destination?.name || 'Trek Bookings'}
+              {destination?.name || "Trek Bookings"}
             </h1>
             <p className="text-lg text-gray-600">
-              Total: <span className="font-semibold text-orange-600">{bookings.length}</span>
-              {' | '}
-              Confirmed: <span className="font-semibold text-green-600">
-                {bookings.filter(b => b.bookingStatus === 'confirmed').length}
+              Total:{" "}
+              <span className="font-semibold text-orange-600">
+                {bookings.length}
               </span>
-              {' | '}
-              Pending: <span className="font-semibold text-yellow-600">
-                {bookings.filter(b => b.bookingStatus === 'pending').length}
+              {" | "}
+              Confirmed:{" "}
+              <span className="font-semibold text-green-600">
+                {bookings.filter((b) => b.bookingStatus === "confirmed").length}
+              </span>
+              {" | "}
+              Pending:{" "}
+              <span className="font-semibold text-yellow-600">
+                {bookings.filter((b) => b.bookingStatus === "pending").length}
               </span>
             </p>
           </div>
@@ -184,7 +202,7 @@ const AdminBookings = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-            
+
             <div className="flex gap-3">
               <select
                 className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 outline-none"
@@ -206,26 +224,50 @@ const AdminBookings = () => {
             <table className="w-full">
               <thead className="bg-gray-50 border-b">
                 <tr>
-                  <th className="text-left py-3 px-4 font-semibold text-gray-900 text-sm">Booking ID</th>
-                  <th className="text-left py-3 px-4 font-semibold text-gray-900 text-sm">User Details</th>
-                  <th className="text-left py-3 px-4 font-semibold text-gray-900 text-sm hidden lg:table-cell">Mobile</th>
-                  <th className="text-left py-3 px-4 font-semibold text-gray-900 text-sm hidden md:table-cell">Date Slot</th>
-                  <th className="text-center py-3 px-4 font-semibold text-gray-900 text-sm">Persons</th>
-                  <th className="text-left py-3 px-4 font-semibold text-gray-900 text-sm">Status</th>
-                  <th className="text-center py-3 px-4 font-semibold text-gray-900 text-sm">Actions</th>
+                  <th className="text-left py-3 px-4 font-semibold text-gray-900 text-sm">
+                    Booking ID
+                  </th>
+                  <th className="text-left py-3 px-4 font-semibold text-gray-900 text-sm">
+                    User Details
+                  </th>
+                  <th className="text-left py-3 px-4 font-semibold text-gray-900 text-sm hidden lg:table-cell">
+                    Mobile
+                  </th>
+                  <th className="text-left py-3 px-4 font-semibold text-gray-900 text-sm hidden md:table-cell">
+                    Date Slot
+                  </th>
+                  <th className="text-center py-3 px-4 font-semibold text-gray-900 text-sm">
+                    Persons
+                  </th>
+                  <th className="text-left py-3 px-4 font-semibold text-gray-900 text-sm">
+                    Status
+                  </th>
+                  <th className="text-center py-3 px-4 font-semibold text-gray-900 text-sm">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
                 {filteredBookings.map((booking) => (
                   <tr key={booking._id} className="hover:bg-gray-50">
                     <td className="py-4 px-4">
-                      <span className="font-medium text-orange-600 text-sm">{booking.bookingId}</span>
-                      <div className="text-xs text-gray-500 mt-1">{formatDateTime(booking.createdAt)}</div>
+                      <span className="font-medium text-orange-600 text-sm">
+                        {booking.bookingId}
+                      </span>
+                      <div className="text-xs text-gray-500 mt-1">
+                        {formatDateTime(booking.createdAt)}
+                      </div>
                     </td>
                     <td className="py-4 px-4">
-                      <div className="font-medium text-gray-900 text-sm">{booking.userId?.name || 'N/A'}</div>
-                      <div className="text-xs text-gray-500">{booking.userId?.email || 'N/A'}</div>
-                      <div className="text-xs text-gray-500 lg:hidden mt-1">{booking.mobileNumber}</div>
+                      <div className="font-medium text-gray-900 text-sm">
+                        {booking.userId?.name || "N/A"}
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        {booking.userId?.email || "N/A"}
+                      </div>
+                      <div className="text-xs text-gray-500 lg:hidden mt-1">
+                        {booking.mobileNumber}
+                      </div>
                     </td>
                     <td className="py-4 px-4 text-gray-600 text-sm hidden lg:table-cell">
                       {booking.mobileNumber}
@@ -268,11 +310,13 @@ const AdminBookings = () => {
         {filteredBookings.length === 0 && (
           <div className="bg-white rounded-lg shadow-sm border p-12 text-center mt-6">
             <Search className="w-12 h-12 mx-auto text-gray-400 mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No bookings found</h3>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              No bookings found
+            </h3>
             <p className="text-gray-500">
-              {searchTerm || bookingStatusFilter !== 'All'
-                ? 'Try adjusting your filters.'
-                : 'No bookings yet for this trek.'}
+              {searchTerm || bookingStatusFilter !== "All"
+                ? "Try adjusting your filters."
+                : "No bookings yet for this trek."}
             </p>
           </div>
         )}
@@ -285,62 +329,87 @@ const AdminBookings = () => {
             {/* Modal Header */}
             <div className="sticky top-0 bg-gradient-to-r from-orange-600 to-red-600 px-6 py-4 flex justify-between items-center">
               <h3 className="text-xl font-bold text-white">Booking Details</h3>
-              <button onClick={() => setShowDetailsModal(false)} className="text-white hover:text-gray-200">
+              <button
+                onClick={() => setShowDetailsModal(false)}
+                className="text-white hover:text-gray-200"
+              >
                 <X className="w-6 h-6" />
               </button>
             </div>
-            
+
             <div className="p-6 space-y-6">
               {/* Booking Info */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-sm text-gray-500 mb-1">Booking ID</p>
-                  <p className="font-semibold text-gray-900">{selectedBooking.bookingId}</p>
+                  <p className="font-semibold text-gray-900">
+                    {selectedBooking.bookingId}
+                  </p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-500 mb-1">Booking Date</p>
-                  <p className="font-semibold text-gray-900">{formatDateTime(selectedBooking.createdAt)}</p>
+                  <p className="font-semibold text-gray-900">
+                    {formatDateTime(selectedBooking.createdAt)}
+                  </p>
                 </div>
               </div>
 
               {/* User Info */}
               <div className="border-t pt-4">
-                <h4 className="font-semibold text-gray-900 mb-3">User Information</h4>
+                <h4 className="font-semibold text-gray-900 mb-3">
+                  User Information
+                </h4>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <p className="text-sm text-gray-500 mb-1">Name</p>
-                    <p className="font-medium text-gray-900">{selectedBooking.userId?.name || 'N/A'}</p>
+                    <p className="font-medium text-gray-900">
+                      {selectedBooking.userId?.name || "N/A"}
+                    </p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-500 mb-1">Email</p>
-                    <p className="font-medium text-gray-900">{selectedBooking.userId?.email || 'N/A'}</p>
+                    <p className="font-medium text-gray-900">
+                      {selectedBooking.userId?.email || "N/A"}
+                    </p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-500 mb-1">Mobile</p>
-                    <p className="font-medium text-gray-900">{selectedBooking.mobileNumber}</p>
+                    <p className="font-medium text-gray-900">
+                      {selectedBooking.mobileNumber}
+                    </p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-500 mb-1">Persons</p>
-                    <p className="font-medium text-gray-900">{selectedBooking.numPersons}</p>
+                    <p className="font-medium text-gray-900">
+                      {selectedBooking.numPersons}
+                    </p>
                   </div>
                 </div>
               </div>
 
               {/* Trek Info */}
               <div className="border-t pt-4">
-                <h4 className="font-semibold text-gray-900 mb-3">Trek Information</h4>
+                <h4 className="font-semibold text-gray-900 mb-3">
+                  Trek Information
+                </h4>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <p className="text-sm text-gray-500 mb-1">Start Date</p>
-                    <p className="font-medium text-gray-900">{formatDate(selectedBooking.dateSlot.startDate)}</p>
+                    <p className="font-medium text-gray-900">
+                      {formatDate(selectedBooking.dateSlot.startDate)}
+                    </p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-500 mb-1">End Date</p>
-                    <p className="font-medium text-gray-900">{formatDate(selectedBooking.dateSlot.endDate)}</p>
+                    <p className="font-medium text-gray-900">
+                      {formatDate(selectedBooking.dateSlot.endDate)}
+                    </p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-500 mb-1">Amount Paid</p>
-                    <p className="font-medium text-gray-900">₹{selectedBooking.amountPaid?.toLocaleString()}</p>
+                    <p className="font-medium text-gray-900">
+                      ₹{selectedBooking.amountPaid?.toLocaleString()}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -348,7 +417,9 @@ const AdminBookings = () => {
               {/* Payment Screenshot */}
               {selectedBooking.paymentScreenshot?.url && (
                 <div className="border-t pt-4">
-                  <h4 className="font-semibold text-gray-900 mb-3">Payment Screenshot</h4>
+                  <h4 className="font-semibold text-gray-900 mb-3">
+                    Payment Screenshot
+                  </h4>
                   <div className="relative">
                     <img
                       src={selectedBooking.paymentScreenshot.url}
@@ -368,16 +439,20 @@ const AdminBookings = () => {
 
               {/* Status Update */}
               <div className="border-t pt-4">
-                <h4 className="font-semibold text-gray-900 mb-3">Update Booking Status</h4>
+                <h4 className="font-semibold text-gray-900 mb-3">
+                  Update Booking Status
+                </h4>
                 <div className="space-y-2">
-                  {['pending', 'confirmed', 'cancelled'].map((status) => (
+                  {["pending", "confirmed", "cancelled"].map((status) => (
                     <button
                       key={status}
-                      onClick={() => handleUpdateStatus(selectedBooking._id, status)}
+                      onClick={() =>
+                        handleUpdateStatus(selectedBooking._id, status)
+                      }
                       className={`w-full px-4 py-3 rounded-lg font-medium text-sm transition-colors ${
                         selectedBooking.bookingStatus === status
-                          ? 'bg-orange-600 text-white'
-                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                          ? "bg-orange-600 text-white"
+                          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                       }`}
                     >
                       {status.charAt(0).toUpperCase() + status.slice(1)}
@@ -385,7 +460,8 @@ const AdminBookings = () => {
                   ))}
                 </div>
                 <p className="text-xs text-gray-500 mt-3">
-                  Note: Confirming a booking means payment has been verified and accepted.
+                  Note: Confirming a booking means payment has been verified and
+                  accepted.
                 </p>
               </div>
             </div>
@@ -395,8 +471,8 @@ const AdminBookings = () => {
 
       {/* Image Modal */}
       {showImageModal && selectedBooking?.paymentScreenshot?.url && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-[60] p-4" 
+        <div
+          className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-[60] p-4"
           onClick={() => setShowImageModal(false)}
         >
           <div className="relative max-w-5xl w-full">

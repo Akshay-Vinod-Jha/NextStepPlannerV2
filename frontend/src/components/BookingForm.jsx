@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 import qrCode from '../assets/qr.jpg';
 import { sendBookingConfirmation } from '../utils/emailService';
 import { useSelector } from 'react-redux';
+import { getApiUrl } from '../config/config.js';
 
 const BookingForm = () => {
     const location = useLocation();
@@ -40,7 +41,7 @@ const BookingForm = () => {
     const fetchUserDetails = async () => {
       try {
         const response = await axios.post(
-          "http://localhost:5001/gettokendetails",
+          getApiUrl("/gettokendetails"),
           {},
           { withCredentials: true }
         );
@@ -135,7 +136,7 @@ const handleSubmit = async (e) => {
     formDataToSend.append('paymentScreenshot', formData.paymentScreenshot);
 
     const response = await axios.post(
-      `http://localhost:5001/booking/booktrek/${formData.destinationId}`, 
+      getApiUrl(`/booking/booktrek/${formData.destinationId}`), 
       formDataToSend,
       {
         withCredentials: true,
