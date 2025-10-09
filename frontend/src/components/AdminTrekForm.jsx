@@ -11,6 +11,7 @@ import {
   Clock,
   FileText,
   Image,
+  MessageCircle,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -22,6 +23,7 @@ const AdminTrekForm = () => {
     name: "",
     location: "",
     description: "",
+    whatsappGroupLink: "",
     images: [],
     dates: [{ id: "1", startDate: "", endDate: "" }],
     duration: "",
@@ -109,6 +111,7 @@ const AdminTrekForm = () => {
     data.append("name", formData.name);
     data.append("location", formData.location);
     data.append("description", formData.description);
+    data.append("whatsappGroupLink", formData.whatsappGroupLink);
     data.append("duration", formData.duration);
     data.append("price", formData.price);
     data.append("transportMode", formData.transportMode);
@@ -159,7 +162,7 @@ const AdminTrekForm = () => {
               <div>
                 <h1 className="text-3xl font-bold text-white">Add New Trek</h1>
                 <p className="text-orange-100">
-                  Upload trekking details for Trekora
+                  Upload trekking details for TREKORA
                 </p>
               </div>
             </div>
@@ -215,6 +218,29 @@ const AdminTrekForm = () => {
                 className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-orange-600 focus:ring-2 focus:ring-orange-200 transition-all duration-300 resize-none"
                 placeholder="Describe the trek experience, highlights, and what makes it special..."
               />
+            </div>
+
+            {/* WhatsApp Group Link */}
+            <div>
+              <label className="flex items-center text-lg font-semibold text-gray-900 mb-3">
+                <MessageCircle className="h-5 w-5 text-green-600 mr-2" />
+                WhatsApp Group Link
+              </label>
+              <input
+                type="url"
+                name="whatsappGroupLink"
+                value={formData.whatsappGroupLink}
+                onChange={handleInputChange}
+                className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-green-600 focus:ring-2 focus:ring-green-200 transition-all duration-300"
+                placeholder="https://chat.whatsapp.com/xxxxxxxxxxxxxxx"
+              />
+              <p className="mt-2 text-sm text-gray-600">
+                <span className="flex items-center">
+                  <MessageCircle className="h-4 w-4 text-green-500 mr-1" />
+                  Optional: Add WhatsApp group invite link for trek participants
+                  to connect and coordinate
+                </span>
+              </p>
             </div>
 
             {/* Image Upload */}
@@ -404,13 +430,11 @@ const AdminTrekForm = () => {
                   className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-orange-600 focus:ring-2 focus:ring-orange-200 transition-all duration-300"
                 >
                   <option value="">Select transport mode</option>
-                  <option value="bus">Bus</option>
+                  <option value="ac-bus">AC Bus</option>
+                  <option value="non-ac-bus">Non-AC Bus</option>
                   <option value="train">Train</option>
                   <option value="flight">Flight</option>
                   <option value="private-vehicle">Private Vehicle</option>
-                  <option value="shared-taxi">Shared Taxi</option>
-                  <option value="self-drive">Self Drive</option>
-                  <option value="multiple">Multiple Modes</option>
                 </select>
               </div>
 

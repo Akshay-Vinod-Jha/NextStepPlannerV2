@@ -188,6 +188,7 @@ const BookingForm = () => {
             totalAmount: (
               destination.price * formData.numPersons
             ).toLocaleString(),
+            whatsappGroupLink: destination.whatsappGroupLink || null,
           };
 
           const emailResult = await sendBookingConfirmation(bookingData);
@@ -585,21 +586,29 @@ const BookingForm = () => {
               </p>
               <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-4">
                 <p className="text-sm font-semibold text-orange-800 mb-2">
-                  📱 Join the WhatsApp Group for further updates regarding the
-                  Trek
+                  📱{" "}
+                  {destination.whatsappGroupLink
+                    ? "Join the Trek WhatsApp Group for updates and coordination with fellow trekkers!"
+                    : "WhatsApp group link will be shared once available"}
                 </p>
               </div>
             </div>
 
             {/* WhatsApp Group Button */}
-            <a
-              href="https://chat.whatsapp.com/JTByVDWXBmiKMWGuO2Lfex"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-semibold text-center transition-colors duration-300 mb-3"
-            >
-              Join WhatsApp Group
-            </a>
+            {destination.whatsappGroupLink ? (
+              <a
+                href={destination.whatsappGroupLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-semibold text-center transition-colors duration-300 mb-3"
+              >
+                Join Trek WhatsApp Group
+              </a>
+            ) : (
+              <div className="w-full bg-gray-300 text-gray-600 py-3 rounded-lg font-semibold text-center mb-3">
+                WhatsApp Group Not Available
+              </div>
+            )}
 
             {/* Continue Button */}
             <button

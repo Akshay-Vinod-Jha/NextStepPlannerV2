@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { Mail, MapPin, Send, Instagram, Loader2, CheckCircle } from "lucide-react";
+import {
+  Mail,
+  MapPin,
+  Send,
+  Instagram,
+  Loader2,
+  CheckCircle,
+  Phone,
+} from "lucide-react";
 import { sendContactEmail } from "../utils/emailService";
 import { toast } from "react-toastify";
 
@@ -16,16 +24,16 @@ const Contact = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     setIsSubmitting(true);
-    
+
     try {
       const result = await sendContactEmail(formData);
-      
+
       if (result.success) {
         setSubmitSuccess(true);
         toast.success("Message sent successfully! We'll get back to you soon.");
-        
+
         // Reset form after 3 seconds
         setTimeout(() => {
           setFormData({
@@ -38,7 +46,9 @@ const Contact = () => {
           setSubmitSuccess(false);
         }, 3000);
       } else {
-        toast.error("Failed to send message. Please try again or email us directly.");
+        toast.error(
+          "Failed to send message. Please try again or email us directly."
+        );
       }
     } catch (error) {
       console.error("Error sending email:", error);
@@ -76,11 +86,29 @@ const Contact = () => {
             <div className="space-y-6">
               <div className="flex items-center space-x-4">
                 <div className="bg-orange-600 p-3 rounded-full">
+                  <Phone className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <h4 className="font-semibold text-gray-900">Phone</h4>
+                  <a
+                    href="tel:+919156797374"
+                    className="text-gray-600 hover:text-orange-600 transition-colors"
+                  >
+                    +91 91567 97374
+                  </a>
+                </div>
+              </div>
+
+              <div className="flex items-center space-x-4">
+                <div className="bg-orange-600 p-3 rounded-full">
                   <Mail className="h-6 w-6 text-white" />
                 </div>
                 <div>
                   <h4 className="font-semibold text-gray-900">Email</h4>
-                  <a href="mailto:contact.trekoraadventures@gmail.com" className="text-gray-600 hover:text-orange-600 transition-colors break-all">
+                  <a
+                    href="mailto:contact.trekoraadventures@gmail.com"
+                    className="text-gray-600 hover:text-orange-600 transition-colors break-all"
+                  >
                     contact.trekoraadventures@gmail.com
                   </a>
                 </div>
@@ -92,9 +120,9 @@ const Contact = () => {
                 </div>
                 <div>
                   <h4 className="font-semibold text-gray-900">Instagram</h4>
-                  <a 
-                    href="https://www.instagram.com/trekora.adventures" 
-                    target="_blank" 
+                  <a
+                    href="https://www.instagram.com/trekora.adventures"
+                    target="_blank"
                     rel="noopener noreferrer"
                     className="text-gray-600 hover:text-orange-600 transition-colors"
                   >
@@ -115,7 +143,7 @@ const Contact = () => {
             </div>
 
             <div className="mt-8 p-6 bg-gradient-to-r from-orange-600 to-red-600 rounded-2xl text-white">
-              <h4 className="text-xl font-bold mb-2">Why Choose Trekora?</h4>
+              <h4 className="text-xl font-bold mb-2">Why Choose TREKORA?</h4>
               <ul className="space-y-2 text-sm">
                 <li>• Explore Maharashtra's scenic treks</li>
                 <li>• Expert local guides</li>
@@ -231,10 +259,10 @@ const Contact = () => {
                 disabled={isSubmitting || submitSuccess}
                 className={`w-full py-4 rounded-lg font-semibold flex items-center justify-center space-x-2 transition-all duration-300 ${
                   submitSuccess
-                    ? 'bg-green-600 hover:bg-green-700'
+                    ? "bg-green-600 hover:bg-green-700"
                     : isSubmitting
-                    ? 'bg-orange-400 cursor-not-allowed'
-                    : 'bg-orange-600 hover:bg-orange-700'
+                    ? "bg-orange-400 cursor-not-allowed"
+                    : "bg-orange-600 hover:bg-orange-700"
                 } text-white`}
               >
                 {isSubmitting ? (

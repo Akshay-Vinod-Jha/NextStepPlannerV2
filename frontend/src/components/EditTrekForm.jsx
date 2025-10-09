@@ -12,6 +12,7 @@ import {
   Clock,
   FileText,
   Image,
+  MessageCircle,
 } from "lucide-react";
 import { toast } from "react-toastify";
 import { getApiUrl } from "../config/config.js";
@@ -27,6 +28,7 @@ const EditTrekForm = () => {
     name: "",
     location: "",
     description: "",
+    whatsappGroupLink: "",
     images: [],
     dates: [{ id: "1", startDate: "", endDate: "" }],
     duration: "",
@@ -46,6 +48,7 @@ const EditTrekForm = () => {
         name: destination.name || "",
         location: destination.location || "",
         description: destination.description || "",
+        whatsappGroupLink: destination.whatsappGroupLink || "",
         images: [], // Include existing images
         dates:
           destination.dates?.length > 0
@@ -149,6 +152,7 @@ const EditTrekForm = () => {
     data.append("name", formData.name);
     data.append("location", formData.location);
     data.append("description", formData.description);
+    data.append("whatsappGroupLink", formData.whatsappGroupLink);
     data.append("duration", formData.duration);
     data.append("price", formData.price);
     data.append("transportMode", formData.transportMode);
@@ -277,6 +281,22 @@ const EditTrekForm = () => {
                 onChange={handleInputChange}
                 className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-orange-600 focus:ring-2 focus:ring-orange-200 transition-all duration-300 resize-none"
                 placeholder="Describe the trek experience, highlights, and what makes it special..."
+              />
+            </div>
+
+            {/* WhatsApp Group Link */}
+            <div>
+              <label className="flex items-center text-lg font-semibold text-gray-900 mb-3">
+                <MessageCircle className="h-5 w-5 text-orange-600 mr-2" />
+                WhatsApp Group Link
+              </label>
+              <input
+                type="url"
+                name="whatsappGroupLink"
+                value={formData.whatsappGroupLink}
+                onChange={handleInputChange}
+                className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-orange-600 focus:ring-2 focus:ring-orange-200 transition-all duration-300"
+                placeholder="https://chat.whatsapp.com/..."
               />
             </div>
 
@@ -533,13 +553,11 @@ const EditTrekForm = () => {
                   className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-orange-600 focus:ring-2 focus:ring-orange-200 transition-all duration-300"
                 >
                   <option value="">Select transport mode</option>
-                  <option value="bus">Bus</option>
+                  <option value="ac-bus">AC Bus</option>
+                  <option value="non-ac-bus">Non-AC Bus</option>
                   <option value="train">Train</option>
                   <option value="flight">Flight</option>
                   <option value="private-vehicle">Private Vehicle</option>
-                  <option value="shared-taxi">Shared Taxi</option>
-                  <option value="self-drive">Self Drive</option>
-                  <option value="multiple">Multiple Modes</option>
                 </select>
               </div>
 

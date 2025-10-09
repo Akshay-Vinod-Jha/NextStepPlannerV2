@@ -1,12 +1,12 @@
-import emailjs from '@emailjs/browser';
+import emailjs from "@emailjs/browser";
 
 // EmailJS Configuration
 // Replace these with your actual values from EmailJS dashboard
 const EMAILJS_CONFIG = {
-  SERVICE_ID: 'service_m2hfg9b', // Replace with your service ID
-  CONTACT_TEMPLATE_ID: 'template_fs06e0j', // Replace with contact form template ID
-  BOOKING_TEMPLATE_ID: 'template_5k8cvho', // Replace with booking confirmation template ID
-  PUBLIC_KEY: 'jBzhwIYg0-UkSLiSp', // Replace with your public key
+  SERVICE_ID: "service_m2hfg9b", // Replace with your service ID
+  CONTACT_TEMPLATE_ID: "template_fs06e0j", // Replace with contact form template ID
+  BOOKING_TEMPLATE_ID: "template_5k8cvho", // Replace with booking confirmation template ID
+  PUBLIC_KEY: "jBzhwIYg0-UkSLiSp", // Replace with your public key
 };
 
 // Initialize EmailJS
@@ -20,10 +20,10 @@ export const sendContactEmail = async (formData) => {
     const templateParams = {
       from_name: formData.name,
       from_email: formData.email,
-      phone: formData.phone || 'Not provided',
-      trek: formData.trek || 'Not specified',
+      phone: formData.phone || "Not provided",
+      trek: formData.trek || "Not specified",
       message: formData.message,
-      to_email: 'contact.trekoraadventures@gmail.com', // Your email
+      to_email: "contact.trekoraadventures@gmail.com", // Your email
     };
 
     const response = await emailjs.send(
@@ -34,7 +34,7 @@ export const sendContactEmail = async (formData) => {
 
     return { success: true, response };
   } catch (error) {
-    console.error('Failed to send contact email:', error);
+    console.error("Failed to send contact email:", error);
     return { success: false, error };
   }
 };
@@ -52,7 +52,9 @@ export const sendBookingConfirmation = async (bookingData) => {
       trek_date: bookingData.trekDate,
       num_persons: bookingData.numPersons,
       total_amount: bookingData.totalAmount,
-      whatsapp_link: 'https://chat.whatsapp.com/JTByVDWXBmiKMWGuO2Lfex', // Update with your actual WhatsApp group link
+      whatsapp_link:
+        bookingData.whatsappGroupLink ||
+        "No WhatsApp group available for this trek",
       to_email: bookingData.userEmail, // Send to user's email
     };
 
@@ -64,7 +66,7 @@ export const sendBookingConfirmation = async (bookingData) => {
 
     return { success: true, response };
   } catch (error) {
-    console.error('Failed to send booking confirmation:', error);
+    console.error("Failed to send booking confirmation:", error);
     return { success: false, error };
   }
 };
