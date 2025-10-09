@@ -26,12 +26,14 @@ const startServer = async () => {
     app.use(bodyParser.json());
     app.use(cookieParser());
     app.use(passport.initialize());
-    
+
     const allowedOrigins = [
-      "http://localhost:5173",
-      "http://localhost:5174",
-      "https://next-step-planner-v2-sze3.vercel.app",
-      process.env.FRONTEND_URL,
+      "http://localhost:5173", // local dev
+      "http://localhost:5174", // local dev
+      "https://next-step-planner-v2-sze3.vercel.app", // old vercel deploy (optional now)
+      "https://trekora.live", // custom domain
+      "https://www.trekora.live", // www version of custom domain
+      process.env.FRONTEND_URL, // env variable fallback
     ].filter(Boolean);
 
     app.use(
@@ -39,12 +41,12 @@ const startServer = async () => {
         origin: function (origin, callback) {
           // Allow requests with no origin (like mobile apps or curl requests)
           if (!origin) return callback(null, true);
-          
+
           if (allowedOrigins.indexOf(origin) !== -1) {
             callback(null, true);
           } else {
-            console.log('Blocked origin:', origin);
-            callback(new Error('Not allowed by CORS'));
+            console.log("Blocked origin:", origin);
+            callback(new Error("Not allowed by CORS"));
           }
         },
         credentials: true,
@@ -53,11 +55,11 @@ const startServer = async () => {
 
     // Health check route
     app.get("/health", (req, res) => {
-      res.json({ 
-        status: "OK", 
+      res.json({
+        status: "OK",
         environment: process.env.NODE_ENV,
         frontend_url: process.env.FRONTEND_URL,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
     });
 
