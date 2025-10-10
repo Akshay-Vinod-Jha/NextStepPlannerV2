@@ -86,7 +86,8 @@ export const sendBookingConfirmedEmail = async (bookingData) => {
       trek_date: `${bookingData.trekDateStart} to ${bookingData.trekDateEnd}`,
       num_persons: bookingData.numPersons,
       total_amount: bookingData.totalAmount,
-      whatsapp_link: bookingData.whatsappGroupLink || "Will be shared soon via WhatsApp",
+      whatsapp_link:
+        bookingData.whatsappGroupLink || "Will be shared soon via WhatsApp",
       // Adding status-specific message for confirmation
       message: `🎉 GREAT NEWS! Your booking has been CONFIRMED by our team! 
       
@@ -134,7 +135,9 @@ Booking ID: ${bookingData.bookingId}
 Status: ❌ CANCELLED
 Reason: ${bookingData.cancellationReason || "Administrative decision"}
 
-Your full refund of ${bookingData.totalAmount} will be processed within 5-7 business days. We sincerely apologize for any inconvenience caused.
+Your full refund of ${
+        bookingData.totalAmount
+      } will be processed within 5-7 business days. We sincerely apologize for any inconvenience caused.
 
 For immediate assistance, contact us: 9156797374
 TREKORA Adventures Team`,
