@@ -132,7 +132,9 @@ const AdminBookings = () => {
 
     // Check if user email exists
     if (!booking.userId?.email) {
-      toast.warning(`Booking ${status} but no email address found for customer`);
+      toast.warning(
+        `Booking ${status} but no email address found for customer`
+      );
       return;
     }
 
@@ -150,7 +152,12 @@ const AdminBookings = () => {
         whatsappGroupLink: destination?.whatsappGroupLink,
       };
 
-      console.log("Sending email for status:", status, "to:", emailData.userEmail);
+      console.log(
+        "Sending email for status:",
+        status,
+        "to:",
+        emailData.userEmail
+      );
 
       let emailResult;
       if (status === "confirmed") {

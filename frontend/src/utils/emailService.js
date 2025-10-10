@@ -86,12 +86,14 @@ export const sendBookingConfirmedEmail = async (bookingData) => {
       trek_date: `${bookingData.trekDateStart} to ${bookingData.trekDateEnd}`,
       num_persons: bookingData.numPersons,
       total_amount: bookingData.totalAmount,
-      whatsapp_link: bookingData.whatsappGroupLink || "WhatsApp group link will be shared soon",
+      whatsapp_link:
+        bookingData.whatsappGroupLink ||
+        "WhatsApp group link will be shared soon",
       to_email: bookingData.userEmail,
     };
 
     console.log("Sending confirmation email with params:", templateParams);
-    
+
     const response = await emailjs.send(
       EMAILJS_CONFIG.SERVICE_ID,
       EMAILJS_CONFIG.BOOKING_CONFIRMED_TEMPLATE_ID,
@@ -125,7 +127,7 @@ export const sendBookingCancelledEmail = async (bookingData) => {
     };
 
     console.log("Sending cancellation email with params:", templateParams);
-    
+
     const response = await emailjs.send(
       EMAILJS_CONFIG.SERVICE_ID,
       EMAILJS_CONFIG.BOOKING_CANCELLED_TEMPLATE_ID,
