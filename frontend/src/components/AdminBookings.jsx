@@ -12,6 +12,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { getApiUrl } from "../config/config.js";
+import { sendBookingConfirmedEmail, sendBookingCancelledEmail } from "../utils/emailService.js";
 
 const AdminBookings = () => {
   const location = useLocation();
@@ -97,17 +98,63 @@ const AdminBookings = () => {
       );
 
       if (response.data?.data) {
+        const updatedBooking = response.data.data;
+        
         setBookings((prevBookings) =>
           prevBookings.map((booking) =>
-            booking._id === bookingId ? response.data.data : booking
+            booking._id === bookingId ? updatedBooking : booking
           )
         );
-        setSelectedBooking(response.data.data);
-        toast.success("Booking status updated successfully!");
+        setSelectedBooking(updatedBooking);
+        
+        // Send email notification based on status
+        if (bookingStatus === 'confirmed' || bookingStatus === 'cancelled') {
+          await sendStatusUpdateEmail(updatedBooking, bookingStatus);
+        }
+        
+        toast.success(`Booking ${bookingStatus} successfully!`);
       }
     } catch (error) {
       console.error("Error updating booking status:", error);
       toast.error("Failed to update booking status!");
+    }
+  };
+
+  // Send email when admin updates booking status
+  const sendStatusUpdateEmail = async (booking, status) => {
+    try {
+      const emailData = {
+        userName: booking.userId?.name || "Dear Customer",
+        userEmail: booking.userId?.email,
+        trekName: destination?.name || "Trek",
+        trekLocation: destination?.location || "Location",
+        trekDateStart: formatDate(booking.dateSlot.startDate),
+        trekDateEnd: formatDate(booking.dateSlot.endDate),
+        numPersons: booking.numPersons,
+        totalAmount: `₹${booking.amountPaid?.toLocaleString()}`,
+        bookingId: booking.bookingId,
+        whatsappGroupLink: destination?.whatsappGroupLink,
+      };
+
+      let emailResult;
+      if (status === 'confirmed') {
+        emailResult = await sendBookingConfirmedEmail(emailData);
+        if (emailResult.success) {
+          toast.success("Confirmation email sent to customer!");
+        } else {
+          toast.warning("Booking confirmed but email notification failed");
+        }
+      } else if (status === 'cancelled') {
+        emailResult = await sendBookingCancelledEmail(emailData);
+        if (emailResult.success) {
+          toast.success("Cancellation email sent to customer!");
+        } else {
+          toast.warning("Booking cancelled but email notification failed");
+        }
+      }
+    } catch (error) {
+      console.error("Error sending status update email:", error);
+      toast.warning(`Booking ${status} but failed to send email notification`);
     }
   };
 

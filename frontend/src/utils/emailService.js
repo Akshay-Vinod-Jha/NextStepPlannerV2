@@ -6,6 +6,8 @@ const EMAILJS_CONFIG = {
   SERVICE_ID: "service_m2hfg9b", // Replace with your service ID
   CONTACT_TEMPLATE_ID: "template_fs06e0j", // Replace with contact form template ID
   BOOKING_TEMPLATE_ID: "template_5k8cvho", // Replace with booking confirmation template ID
+  BOOKING_CONFIRMED_TEMPLATE_ID: "template_booking_confirmed", // Admin confirms booking
+  BOOKING_CANCELLED_TEMPLATE_ID: "template_booking_cancelled", // Admin cancels booking
   PUBLIC_KEY: "jBzhwIYg0-UkSLiSp", // Replace with your public key
 };
 
@@ -71,4 +73,76 @@ export const sendBookingConfirmation = async (bookingData) => {
   }
 };
 
-export default { sendContactEmail, sendBookingConfirmation };
+/**
+ * Send booking confirmation email when admin confirms booking
+ */
+export const sendBookingConfirmedEmail = async (bookingData) => {
+  try {
+    const templateParams = {
+      user_name: bookingData.userName,
+      user_email: bookingData.userEmail,
+      trek_name: bookingData.trekName,
+      trek_location: bookingData.trekLocation,
+      trek_date_start: bookingData.trekDateStart,
+      trek_date_end: bookingData.trekDateEnd,
+      num_persons: bookingData.numPersons,
+      total_amount: bookingData.totalAmount,
+      booking_id: bookingData.bookingId,
+      whatsapp_link: bookingData.whatsappGroupLink || "Will be shared soon",
+      contact_number: "9156797374",
+      company_name: "TREKORA",
+      to_email: bookingData.userEmail,
+    };
+
+    const response = await emailjs.send(
+      EMAILJS_CONFIG.SERVICE_ID,
+      EMAILJS_CONFIG.BOOKING_CONFIRMED_TEMPLATE_ID,
+      templateParams
+    );
+
+    return { success: true, response };
+  } catch (error) {
+    console.error("Failed to send booking confirmation email:", error);
+    return { success: false, error };
+  }
+};
+
+/**
+ * Send booking cancellation email when admin cancels booking
+ */
+export const sendBookingCancelledEmail = async (bookingData) => {
+  try {
+    const templateParams = {
+      user_name: bookingData.userName,
+      user_email: bookingData.userEmail,
+      trek_name: bookingData.trekName,
+      trek_location: bookingData.trekLocation,
+      trek_date_start: bookingData.trekDateStart,
+      trek_date_end: bookingData.trekDateEnd,
+      booking_id: bookingData.bookingId,
+      total_amount: bookingData.totalAmount,
+      cancellation_reason: bookingData.cancellationReason || "Administrative decision",
+      contact_number: "9156797374",
+      company_name: "TREKORA",
+      to_email: bookingData.userEmail,
+    };
+
+    const response = await emailjs.send(
+      EMAILJS_CONFIG.SERVICE_ID,
+      EMAILJS_CONFIG.BOOKING_CANCELLED_TEMPLATE_ID,
+      templateParams
+    );
+
+    return { success: true, response };
+  } catch (error) {
+    console.error("Failed to send booking cancellation email:", error);
+    return { success: false, error };
+  }
+};
+
+export default { 
+  sendContactEmail, 
+  sendBookingConfirmation, 
+  sendBookingConfirmedEmail, 
+  sendBookingCancelledEmail 
+};
