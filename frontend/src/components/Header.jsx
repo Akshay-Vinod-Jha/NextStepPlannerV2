@@ -426,7 +426,7 @@ const Header = () => {
   // Centralized logout cleanup function
   const performLogoutCleanup = () => {
     console.log("Starting logout cleanup...");
-    
+
     // Clear Redux state
     dispatch(setIsAuthenticated(false));
     dispatch(setIsAdmin(false));
@@ -437,22 +437,39 @@ const Header = () => {
 
     // Comprehensive localStorage cleanup
     const localStorageKeys = [
-      'userToken', 'userRole', 'isAuthenticated', 'isAdmin', 
-      'persist:root', 'persist:role', 'authToken', 'user', 
-      'userSession', 'token', 'role', 'auth'
+      "userToken",
+      "userRole",
+      "isAuthenticated",
+      "isAdmin",
+      "persist:root",
+      "persist:role",
+      "authToken",
+      "user",
+      "userSession",
+      "token",
+      "role",
+      "auth",
     ];
-    
-    localStorageKeys.forEach(key => {
+
+    localStorageKeys.forEach((key) => {
       localStorage.removeItem(key);
     });
 
     // Comprehensive sessionStorage cleanup
     const sessionStorageKeys = [
-      'userToken', 'userRole', 'isAuthenticated', 'isAdmin',
-      'authToken', 'user', 'userSession', 'token', 'role', 'auth'
+      "userToken",
+      "userRole",
+      "isAuthenticated",
+      "isAdmin",
+      "authToken",
+      "user",
+      "userSession",
+      "token",
+      "role",
+      "auth",
     ];
-    
-    sessionStorageKeys.forEach(key => {
+
+    sessionStorageKeys.forEach((key) => {
       sessionStorage.removeItem(key);
     });
 

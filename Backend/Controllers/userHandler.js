@@ -82,14 +82,14 @@ export const handleUserLogOut = (req, res) => {
   // Enhanced cookie clearing with proper options
   const cookieOptions = {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-    path: '/'
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    path: "/",
   };
 
   // Clear the main token cookie
   res.clearCookie("token", cookieOptions);
-  
+
   // Clear additional cookies that might exist
   res.clearCookie("refreshToken", cookieOptions);
   res.clearCookie("userRole", cookieOptions);
@@ -97,9 +97,9 @@ export const handleUserLogOut = (req, res) => {
 
   console.log("User logged out successfully, all cookies cleared");
 
-  return res.status(200).json({ 
+  return res.status(200).json({
     msg: "User logged out successfully",
     success: true,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 };

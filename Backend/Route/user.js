@@ -1,5 +1,10 @@
 import express from "express";
-import { handleUserSignUp, handlsUserSignIn , handleSignUpUserViaGoogleAuth , handleUserLogOut} from "../Controllers/userHandler.js";
+import {
+  handleUserSignUp,
+  handlsUserSignIn,
+  handleSignUpUserViaGoogleAuth,
+  handleUserLogOut,
+} from "../Controllers/userHandler.js";
 import passport from "passport";
 import configurePassport from "../Config/passport.js";
 import { checkForAuthenticationCookie } from "../Middlewares/authentication.js";
@@ -13,9 +18,16 @@ userRouter.post("/signup", handleUserSignUp);
 
 userRouter.post("/signin", handlsUserSignIn);
 
-userRouter.post("/logout",checkForAuthenticationCookie("token") , handleUserLogOut);
+userRouter.post(
+  "/logout",
+  checkForAuthenticationCookie("token"),
+  handleUserLogOut
+);
 
-userRouter.get("/google",passport.authenticate("google",{scope : ["profile","email"]}));
+userRouter.get(
+  "/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
 
 userRouter.get(
   "/google/callback",
