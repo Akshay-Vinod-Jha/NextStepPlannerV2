@@ -6,8 +6,8 @@ const EMAILJS_CONFIG = {
   SERVICE_ID: "service_m2hfg9b", // Replace with your service ID
   CONTACT_TEMPLATE_ID: "template_fs06e0j", // Replace with contact form template ID
   BOOKING_TEMPLATE_ID: "template_5k8cvho", // Replace with booking confirmation template ID
-  BOOKING_CONFIRMED_TEMPLATE_ID: "template_booking_confirmed", // Admin confirms booking
-  BOOKING_CANCELLED_TEMPLATE_ID: "template_booking_cancelled", // Admin cancels booking
+  BOOKING_CONFIRMED_TEMPLATE_ID: "template_5k8cvho", // Using existing template for admin confirmation
+  BOOKING_CANCELLED_TEMPLATE_ID: "template_5k8cvho", // Using existing template for admin cancellation
   PUBLIC_KEY: "jBzhwIYg0-UkSLiSp", // Replace with your public key
 };
 
@@ -83,14 +83,20 @@ export const sendBookingConfirmedEmail = async (bookingData) => {
       user_email: bookingData.userEmail,
       trek_name: bookingData.trekName,
       trek_location: bookingData.trekLocation,
-      trek_date_start: bookingData.trekDateStart,
-      trek_date_end: bookingData.trekDateEnd,
+      trek_date: `${bookingData.trekDateStart} to ${bookingData.trekDateEnd}`,
       num_persons: bookingData.numPersons,
       total_amount: bookingData.totalAmount,
-      booking_id: bookingData.bookingId,
-      whatsapp_link: bookingData.whatsappGroupLink || "Will be shared soon",
-      contact_number: "9156797374",
-      company_name: "TREKORA",
+      whatsapp_link: bookingData.whatsappGroupLink || "Will be shared soon via WhatsApp",
+      // Adding status-specific message for confirmation
+      message: `🎉 GREAT NEWS! Your booking has been CONFIRMED by our team! 
+      
+Booking ID: ${bookingData.bookingId}
+Status: ✅ CONFIRMED
+
+Your payment has been verified and your trek booking is now confirmed. You will receive WhatsApp group details soon. Please keep this booking ID for reference.
+
+Contact us: 9156797374
+Thank you for choosing TREKORA Adventures!`,
       to_email: bookingData.userEmail,
     };
 
@@ -117,13 +123,21 @@ export const sendBookingCancelledEmail = async (bookingData) => {
       user_email: bookingData.userEmail,
       trek_name: bookingData.trekName,
       trek_location: bookingData.trekLocation,
-      trek_date_start: bookingData.trekDateStart,
-      trek_date_end: bookingData.trekDateEnd,
-      booking_id: bookingData.bookingId,
+      trek_date: `${bookingData.trekDateStart} to ${bookingData.trekDateEnd}`,
+      num_persons: bookingData.numPersons || 1,
       total_amount: bookingData.totalAmount,
-      cancellation_reason: bookingData.cancellationReason || "Administrative decision",
-      contact_number: "9156797374",
-      company_name: "TREKORA",
+      whatsapp_link: "N/A (Booking Cancelled)",
+      // Adding status-specific message for cancellation
+      message: `❌ We regret to inform you that your booking has been CANCELLED.
+      
+Booking ID: ${bookingData.bookingId}
+Status: ❌ CANCELLED
+Reason: ${bookingData.cancellationReason || "Administrative decision"}
+
+Your full refund of ${bookingData.totalAmount} will be processed within 5-7 business days. We sincerely apologize for any inconvenience caused.
+
+For immediate assistance, contact us: 9156797374
+TREKORA Adventures Team`,
       to_email: bookingData.userEmail,
     };
 
@@ -140,9 +154,9 @@ export const sendBookingCancelledEmail = async (bookingData) => {
   }
 };
 
-export default { 
-  sendContactEmail, 
-  sendBookingConfirmation, 
-  sendBookingConfirmedEmail, 
-  sendBookingCancelledEmail 
+export default {
+  sendContactEmail,
+  sendBookingConfirmation,
+  sendBookingConfirmedEmail,
+  sendBookingCancelledEmail,
 };

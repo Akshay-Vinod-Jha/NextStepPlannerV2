@@ -12,7 +12,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { getApiUrl } from "../config/config.js";
-import { sendBookingConfirmedEmail, sendBookingCancelledEmail } from "../utils/emailService.js";
+import {
+  sendBookingConfirmedEmail,
+  sendBookingCancelledEmail,
+} from "../utils/emailService.js";
 
 const AdminBookings = () => {
   const location = useLocation();
@@ -99,19 +102,19 @@ const AdminBookings = () => {
 
       if (response.data?.data) {
         const updatedBooking = response.data.data;
-        
+
         setBookings((prevBookings) =>
           prevBookings.map((booking) =>
             booking._id === bookingId ? updatedBooking : booking
           )
         );
         setSelectedBooking(updatedBooking);
-        
+
         // Send email notification based on status
-        if (bookingStatus === 'confirmed' || bookingStatus === 'cancelled') {
+        if (bookingStatus === "confirmed" || bookingStatus === "cancelled") {
           await sendStatusUpdateEmail(updatedBooking, bookingStatus);
         }
-        
+
         toast.success(`Booking ${bookingStatus} successfully!`);
       }
     } catch (error) {
@@ -137,14 +140,14 @@ const AdminBookings = () => {
       };
 
       let emailResult;
-      if (status === 'confirmed') {
+      if (status === "confirmed") {
         emailResult = await sendBookingConfirmedEmail(emailData);
         if (emailResult.success) {
           toast.success("Confirmation email sent to customer!");
         } else {
           toast.warning("Booking confirmed but email notification failed");
         }
-      } else if (status === 'cancelled') {
+      } else if (status === "cancelled") {
         emailResult = await sendBookingCancelledEmail(emailData);
         if (emailResult.success) {
           toast.success("Cancellation email sent to customer!");
