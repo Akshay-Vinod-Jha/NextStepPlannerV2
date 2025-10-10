@@ -276,12 +276,64 @@ const EditTrekForm = () => {
               <textarea
                 name="description"
                 required
-                rows={4}
+                rows={6}
                 value={formData.description}
                 onChange={handleInputChange}
                 className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-orange-600 focus:ring-2 focus:ring-orange-200 transition-all duration-300 resize-none"
                 placeholder="Describe the trek experience, highlights, and what makes it special..."
               />
+
+              {/* Formatting Guide */}
+              <div className="mt-3 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <h4 className="text-sm font-semibold text-blue-800 mb-2">
+                  📝 Text Formatting Guide:
+                </h4>
+                <div className="text-xs text-blue-700 space-y-1">
+                  <div className="flex items-center space-x-4">
+                    <span className="font-mono bg-blue-100 px-2 py-1 rounded">
+                      **Bold Text**
+                    </span>
+                    <span>
+                      → <strong>Bold Text</strong>
+                    </span>
+                  </div>
+                  <div className="flex items-center space-x-4">
+                    <span className="font-mono bg-blue-100 px-2 py-1 rounded">
+                      *Italic Text*
+                    </span>
+                    <span>
+                      → <em>Italic Text</em>
+                    </span>
+                  </div>
+                  <div className="flex items-center space-x-4">
+                    <span className="font-mono bg-blue-100 px-2 py-1 rounded">
+                      `Code Text`
+                    </span>
+                    <span>
+                      →{" "}
+                      <code className="bg-gray-100 text-orange-600 px-1 rounded">
+                        Code Text
+                      </code>
+                    </span>
+                  </div>
+                  <div className="flex items-center space-x-4">
+                    <span className="font-mono bg-blue-100 px-2 py-1 rounded">
+                      __Underlined__
+                    </span>
+                    <span>
+                      → <u>Underlined</u>
+                    </span>
+                  </div>
+                  <div className="flex items-center space-x-4">
+                    <span className="font-mono bg-blue-100 px-2 py-1 rounded">
+                      ~~Strikethrough~~
+                    </span>
+                    <span>
+                      → <s>Strikethrough</s>
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* WhatsApp Group Link */}

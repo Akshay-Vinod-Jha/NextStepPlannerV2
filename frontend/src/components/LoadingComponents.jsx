@@ -3,19 +3,21 @@ import React from "react";
 const LoadingSpinner = ({ size = "medium", text = "Loading..." }) => {
   const sizeClasses = {
     small: "w-4 h-4",
-    medium: "w-8 h-8", 
-    large: "w-12 h-12"
+    medium: "w-8 h-8",
+    large: "w-12 h-12",
   };
 
   const textSizeClasses = {
     small: "text-sm",
     medium: "text-base",
-    large: "text-lg"
+    large: "text-lg",
   };
 
   return (
     <div className="flex flex-col items-center justify-center p-4">
-      <div className={`${sizeClasses[size]} border-4 border-orange-200 border-t-orange-600 rounded-full animate-spin`}></div>
+      <div
+        className={`${sizeClasses[size]} border-4 border-orange-200 border-t-orange-600 rounded-full animate-spin`}
+      ></div>
       <p className={`mt-2 text-gray-600 ${textSizeClasses[size]}`}>{text}</p>
     </div>
   );
@@ -58,7 +60,7 @@ const TrekCardSkeleton = () => {
     <div className="bg-white rounded-2xl shadow-lg overflow-hidden animate-pulse">
       {/* Image skeleton */}
       <div className="h-56 bg-gray-200"></div>
-      
+
       {/* Content skeleton */}
       <div className="p-6">
         <div className="flex justify-between items-start mb-4">
@@ -68,12 +70,12 @@ const TrekCardSkeleton = () => {
           </div>
           <div className="h-8 w-16 bg-gray-200 rounded-full ml-4"></div>
         </div>
-        
+
         <div className="space-y-2 mb-4">
           <div className="h-4 bg-gray-200 rounded"></div>
           <div className="h-4 bg-gray-200 rounded w-4/5"></div>
         </div>
-        
+
         <div className="flex justify-between items-center">
           <div className="h-6 bg-gray-200 rounded w-24"></div>
           <div className="h-10 w-32 bg-gray-200 rounded-lg"></div>
@@ -83,5 +85,11 @@ const TrekCardSkeleton = () => {
   );
 };
 
-export { LoadingSpinner, FullPageLoader, ButtonLoader, CardLoader, TrekCardSkeleton };
+export {
+  LoadingSpinner,
+  FullPageLoader,
+  ButtonLoader,
+  CardLoader,
+  TrekCardSkeleton,
+};
 export default LoadingSpinner;

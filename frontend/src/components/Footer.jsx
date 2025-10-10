@@ -105,13 +105,13 @@ const Footer = () => {
                 </a>
 
                 <a
-                  href="https://www.instagram.com/trekora.adventures"
+                  href="https://www.instagram.com/trekora_org/?utm_source=qr&igsh=MW4wb3I5bTU4NW91MA%3D%3D#"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center space-x-3 text-gray-400 hover:text-orange-500 transition-colors group"
                 >
                   <Instagram className="h-5 w-5 flex-shrink-0 group-hover:text-orange-500" />
-                  <span className="text-sm">@trekora.adventures</span>
+                  <span className="text-sm">@trekora_org</span>
                 </a>
 
                 <div className="flex items-start space-x-3 text-gray-400">

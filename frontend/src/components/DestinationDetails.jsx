@@ -23,6 +23,7 @@ import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { getApiUrl } from "../config/config.js";
+import DescriptionFormatter from "./DescriptionFormatter";
 const DestinationDetails = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isAutoScrolling, setIsAutoScrolling] = useState(true);
@@ -195,7 +196,7 @@ const DestinationDetails = () => {
           {/* Quick Info and Pricing Section */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
             {/* Quick Info Cards */}
-            <div className="lg:col-span-2 grid grid-cols-2 gap-4">
+            <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="bg-gray-50 p-4 rounded-xl">
                 <div className="flex items-center text-gray-600 mb-2">
                   <Clock className="h-5 w-5 mr-2" />
@@ -203,15 +204,6 @@ const DestinationDetails = () => {
                 </div>
                 <p className="text-gray-900 font-semibold text-lg">
                   {destination.duration}
-                </p>
-              </div>
-              <div className="bg-gray-50 p-4 rounded-xl">
-                <div className="flex items-center text-gray-600 mb-2">
-                  <Mountain className="h-5 w-5 mr-2" />
-                  <span className="font-medium text-base">Altitude</span>
-                </div>
-                <p className="text-gray-900 font-semibold text-lg">
-                  {destination.altitude}
                 </p>
               </div>
               <div className="bg-gray-50 p-4 rounded-xl">
@@ -276,43 +268,6 @@ const DestinationDetails = () => {
             </div>
           </div>
 
-          {/* Description */}
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              About the Trek
-            </h2>
-            <p className="text-gray-600 leading-relaxed text-base">
-              {destination.description}
-            </p>
-          </div>
-
-          {/* Navigation Section */}
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Location</h2>
-            <div className="bg-gray-50 p-4 rounded-xl flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="bg-orange-600 p-2 rounded-lg">
-                  <MapPin className="h-5 w-5 text-white" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900">
-                    {destination.name}
-                  </h3>
-                  <p className="text-sm text-gray-600">
-                    {destination.location}
-                  </p>
-                </div>
-              </div>
-              <button
-                onClick={handleNavigate}
-                className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg font-medium text-sm flex items-center space-x-2 transition-colors duration-300"
-              >
-                <Navigation className="h-4 w-4" />
-                <span>Get Directions</span>
-              </button>
-            </div>
-          </div>
-
           {/* Available Dates */}
           <div className="mb-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">
@@ -359,6 +314,44 @@ const DestinationDetails = () => {
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+
+          {/* Description */}
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+              About the Trek
+            </h2>
+            <DescriptionFormatter
+              description={destination.description}
+              className="text-base"
+            />
+          </div>
+
+          {/* Navigation Section */}
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Location</h2>
+            <div className="bg-gray-50 p-4 rounded-xl flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="bg-orange-600 p-2 rounded-lg">
+                  <MapPin className="h-5 w-5 text-white" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900">
+                    {destination.name}
+                  </h3>
+                  <p className="text-sm text-gray-600">
+                    {destination.location}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={handleNavigate}
+                className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg font-medium text-sm flex items-center space-x-2 transition-colors duration-300"
+              >
+                <Navigation className="h-4 w-4" />
+                <span>Get Directions</span>
+              </button>
             </div>
           </div>
 

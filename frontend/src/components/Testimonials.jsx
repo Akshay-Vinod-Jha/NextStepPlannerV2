@@ -126,8 +126,8 @@ const Testimonials = () => {
               {/* Founder Message */}
               <div className="space-y-4 text-gray-700 leading-relaxed order-1 lg:order-2">
                 <p className="text-lg font-medium text-gray-900">
-                  "Hi, I'm Girish Kale, the founder of TREKORA, where
-                  passion meets the peaks! ⛰️"
+                  "Hi, I'm Girish Kale, the founder of TREKORA, where passion
+                  meets the peaks! ⛰️"
                 </p>
 
                 <p>
@@ -141,9 +141,9 @@ const Testimonials = () => {
                 <p>
                   What started as my weekend escapes into nature soon turned
                   into a vision—to create a community that finds joy, freedom,
-                  and purpose in exploring the outdoors. At TREKORA,
-                  we don't just trek—we seek stories, build memories, and
-                  inspire courage.
+                  and purpose in exploring the outdoors. At TREKORA, we don't
+                  just trek—we seek stories, build memories, and inspire
+                  courage.
                 </p>
 
                 <p className="font-semibold text-gray-900">

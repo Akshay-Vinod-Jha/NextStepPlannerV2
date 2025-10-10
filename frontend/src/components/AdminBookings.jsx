@@ -97,7 +97,7 @@ const AdminBookings = () => {
   const handleUpdateStatus = async (bookingId, bookingStatus) => {
     try {
       setUpdating(bookingId); // Set loading state for this booking
-      
+
       const response = await axios.patch(
         getApiUrl(`/booking/update/${bookingId}`),
         { bookingStatus },
@@ -535,7 +535,11 @@ const AdminBookings = () => {
                       }`}
                     >
                       {updating === selectedBooking._id ? (
-                        <ButtonLoader text={`${status.charAt(0).toUpperCase() + status.slice(1)}ing...`} />
+                        <ButtonLoader
+                          text={`${
+                            status.charAt(0).toUpperCase() + status.slice(1)
+                          }ing...`}
+                        />
                       ) : (
                         status.charAt(0).toUpperCase() + status.slice(1)
                       )}

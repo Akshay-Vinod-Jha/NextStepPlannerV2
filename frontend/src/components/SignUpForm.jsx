@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { User, Mail, Lock, Eye, EyeOff, Mountain } from "lucide-react";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -14,6 +14,11 @@ const SignUpForm = () => {
     password: "",
   });
   const [errors, setErrors] = useState({});
+
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  }, []);
   const [showPassword, setShowPassword] = useState(false);
 
   const validateForm = () => {

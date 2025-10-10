@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Mail, Lock, Eye, EyeOff, Mountain } from "lucide-react"; // Changed Phone to Mail
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -20,6 +20,11 @@ const SignInForm = () => {
   const location = useLocation();
   const fromObj = location.state?.from;
   const dispatch = useDispatch();
+
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  }, []);
 
   // Simplified handleInputChange with email validation
   const handleInputChange = (e) => {

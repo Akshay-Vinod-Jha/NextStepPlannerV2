@@ -126,12 +126,12 @@ const Contact = () => {
                   <div>
                     <h4 className="font-semibold text-gray-900">Instagram</h4>
                     <a
-                      href="https://www.instagram.com/trekora.adventures"
+                      href="https://www.instagram.com/trekora_org/?utm_source=qr&igsh=MW4wb3I5bTU4NW91MA%3D%3D#"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-gray-600 hover:text-orange-600 transition-colors"
                     >
-                      @trekora.adventures
+                      @trekora_org
                     </a>
                   </div>
                 </div>
