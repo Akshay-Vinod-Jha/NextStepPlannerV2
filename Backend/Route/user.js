@@ -11,12 +11,16 @@ const userRouter = express.Router();
 
 userRouter.post("/signup", handleUserSignUp);
 
-userRouter.post("/signin" , handlsUserSignIn);
+userRouter.post("/signin", handlsUserSignIn);
 
 userRouter.post("/logout",checkForAuthenticationCookie("token") , handleUserLogOut);
 
 userRouter.get("/google",passport.authenticate("google",{scope : ["profile","email"]}));
 
-userRouter.get("/google/callback",passport.authenticate("google",{session : false}),handleSignUpUserViaGoogleAuth);
+userRouter.get(
+  "/google/callback",
+  passport.authenticate("google", { session: false }),
+  handleSignUpUserViaGoogleAuth
+);
 
 export default userRouter;

@@ -79,7 +79,27 @@ export const handleSignUpUserViaGoogleAuth = async (req, res) => {
 };
 
 export const handleUserLogOut = (req, res) => {
-  res.clearCookie("token");
+  // Enhanced cookie clearing with proper options
+  const cookieOptions = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    path: '/'
+  };
 
-  return res.status(200).json({ msg: "User logged out successfully" });
+  // Clear the main token cookie
+  res.clearCookie("token", cookieOptions);
+  
+  // Clear additional cookies that might exist
+  res.clearCookie("refreshToken", cookieOptions);
+  res.clearCookie("userRole", cookieOptions);
+  res.clearCookie("authToken", cookieOptions);
+
+  console.log("User logged out successfully, all cookies cleared");
+
+  return res.status(200).json({ 
+    msg: "User logged out successfully",
+    success: true,
+    timestamp: new Date().toISOString()
+  });
 };

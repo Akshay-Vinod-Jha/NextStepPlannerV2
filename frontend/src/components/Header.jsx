@@ -380,34 +380,102 @@ const Header = () => {
 
   const handleUserLogOut = async () => {
     console.log("Logging out user...");
+
+    // Show loading toast
+    const loadingToast = toast.loading("Logging out...");
+
     try {
       const response = await axios.post(
         getApiUrl("/user/logout"),
         {},
-        { withCredentials: true }
+        {
+          withCredentials: true,
+          timeout: 10000, // 10 second timeout
+        }
       );
 
       console.log("Logout response:", response);
 
-      if (response.status === 200) {
-        console.log("User logged out successfully");
-        dispatch(setIsAuthenticated(false));
-        dispatch(setIsAdmin(false));
-        setUserRole(null);
-        setIsDropdownOpen(false);
+      // Handle both new and old backend response formats
+      const isSuccess =
+        response.status === 200 &&
+        (response.data.success === true || // New format
+          response.data.msg === "User logged out successfully" || // Old format
+          response.data.message === "User logged out successfully"); // Alternative old format
+
+      if (isSuccess) {
+        console.log("User logged out successfully from server");
+        performLogoutCleanup();
+        toast.dismiss(loadingToast);
         toast.success("Logged out successfully");
-        navigate("/");
+      } else {
+        console.log("Unexpected server response:", response.data);
+        throw new Error("Server logout failed - unexpected response");
       }
     } catch (error) {
       console.error("Logout failed:", error);
-      // Still log out on client-side even if server fails
-      dispatch(setIsAuthenticated(false));
-      dispatch(setIsAdmin(false));
-      setUserRole(null);
-      setIsDropdownOpen(false);
-      toast.error("Logout failed, please try again");
-      navigate("/");
+
+      // Force logout on client-side even if server fails
+      console.log("Performing force logout due to server error");
+      performLogoutCleanup();
+      toast.dismiss(loadingToast);
+      toast.warning("Logged out (server connection failed)");
     }
+  };
+
+  // Centralized logout cleanup function
+  const performLogoutCleanup = () => {
+    console.log("Starting logout cleanup...");
+    
+    // Clear Redux state
+    dispatch(setIsAuthenticated(false));
+    dispatch(setIsAdmin(false));
+
+    // Clear local state
+    setUserRole(null);
+    setIsDropdownOpen(false);
+
+    // Comprehensive localStorage cleanup
+    const localStorageKeys = [
+      'userToken', 'userRole', 'isAuthenticated', 'isAdmin', 
+      'persist:root', 'persist:role', 'authToken', 'user', 
+      'userSession', 'token', 'role', 'auth'
+    ];
+    
+    localStorageKeys.forEach(key => {
+      localStorage.removeItem(key);
+    });
+
+    // Comprehensive sessionStorage cleanup
+    const sessionStorageKeys = [
+      'userToken', 'userRole', 'isAuthenticated', 'isAdmin',
+      'authToken', 'user', 'userSession', 'token', 'role', 'auth'
+    ];
+    
+    sessionStorageKeys.forEach(key => {
+      sessionStorage.removeItem(key);
+    });
+
+    // Clear all localStorage and sessionStorage to be extra sure
+    try {
+      localStorage.clear();
+      sessionStorage.clear();
+    } catch (error) {
+      console.error("Error clearing storage:", error);
+    }
+
+    console.log("Storage cleared, navigating to home...");
+
+    // Force immediate navigation and page reload to clear all state
+    setTimeout(() => {
+      navigate("/", { replace: true });
+      // Force page reload to ensure complete logout
+      setTimeout(() => {
+        window.location.reload();
+      }, 200);
+    }, 100);
+
+    console.log("Logout cleanup completed");
   };
 
   // Close dropdown when clicking outside
@@ -459,8 +527,12 @@ const Header = () => {
 
         <div className="border-t border-gray-100"></div>
         <button
-          onClick={handleUserLogOut}
-          className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+          onClick={() => {
+            if (window.confirm("Are you sure you want to logout?")) {
+              handleUserLogOut();
+            }
+          }}
+          className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors duration-200"
         >
           <LogOut className="mr-3 h-5 w-5" />
           <span>Logout</span>
