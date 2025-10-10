@@ -103,7 +103,7 @@ const Testimonials = () => {
                 <div className="relative overflow-hidden rounded-2xl shadow-xl">
                   <img
                     src={founderPhoto}
-                    alt="Girish Kale - Founder of TREKORA Adventures"
+                    alt="Girish Kale - Founder of TREKORA"
                     className="w-full h-auto object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
@@ -115,7 +115,7 @@ const Testimonials = () => {
                     Girish Kale
                   </h3>
                   <p className="text-orange-600 font-medium">
-                    Founder, TREKORA Adventures
+                    Founder, TREKORA
                   </p>
                   <p className="text-sm text-gray-600 mt-1">
                     B.E. Information Technology, PICT Pune
@@ -126,7 +126,7 @@ const Testimonials = () => {
               {/* Founder Message */}
               <div className="space-y-4 text-gray-700 leading-relaxed order-1 lg:order-2">
                 <p className="text-lg font-medium text-gray-900">
-                  "Hi, I'm Girish Kale, the founder of TREKORA Adventures, where
+                  "Hi, I'm Girish Kale, the founder of TREKORA, where
                   passion meets the peaks! ⛰️"
                 </p>
 
@@ -141,7 +141,7 @@ const Testimonials = () => {
                 <p>
                   What started as my weekend escapes into nature soon turned
                   into a vision—to create a community that finds joy, freedom,
-                  and purpose in exploring the outdoors. At TREKORA Adventures,
+                  and purpose in exploring the outdoors. At TREKORA,
                   we don't just trek—we seek stories, build memories, and
                   inspire courage.
                 </p>
@@ -160,7 +160,7 @@ const Testimonials = () => {
                 <div className="mt-8 pt-6 border-t border-gray-200">
                   <p className="font-bold text-lg text-gray-900">Girish Kale</p>
                   <p className="text-orange-600 font-medium">
-                    Founder, TREKORA Adventures
+                    Founder, TREKORA
                   </p>
                 </div>
               </div>

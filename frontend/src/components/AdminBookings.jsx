@@ -16,6 +16,7 @@ import {
   sendBookingConfirmedEmail,
   sendBookingCancelledEmail,
 } from "../utils/emailService.js";
+import { LoadingSpinner, ButtonLoader } from "./LoadingComponents";
 
 const AdminBookings = () => {
   const location = useLocation();
@@ -24,6 +25,7 @@ const AdminBookings = () => {
 
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [updating, setUpdating] = useState(null); // Track which booking is being updated
   const [searchTerm, setSearchTerm] = useState("");
   const [bookingStatusFilter, setBookingStatusFilter] = useState("All");
   const [selectedBooking, setSelectedBooking] = useState(null);
@@ -94,6 +96,8 @@ const AdminBookings = () => {
   // Update booking status
   const handleUpdateStatus = async (bookingId, bookingStatus) => {
     try {
+      setUpdating(bookingId); // Set loading state for this booking
+      
       const response = await axios.patch(
         getApiUrl(`/booking/update/${bookingId}`),
         { bookingStatus },
@@ -120,6 +124,8 @@ const AdminBookings = () => {
     } catch (error) {
       console.error("Error updating booking status:", error);
       toast.error("Failed to update booking status!");
+    } finally {
+      setUpdating(null); // Clear loading state
     }
   };
 
@@ -521,13 +527,18 @@ const AdminBookings = () => {
                       onClick={() =>
                         handleUpdateStatus(selectedBooking._id, status)
                       }
-                      className={`w-full px-4 py-3 rounded-lg font-medium text-sm transition-colors ${
+                      disabled={updating === selectedBooking._id}
+                      className={`w-full px-4 py-3 rounded-lg font-medium text-sm transition-colors disabled:opacity-75 disabled:cursor-not-allowed ${
                         selectedBooking.bookingStatus === status
                           ? "bg-orange-600 text-white"
                           : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                       }`}
                     >
-                      {status.charAt(0).toUpperCase() + status.slice(1)}
+                      {updating === selectedBooking._id ? (
+                        <ButtonLoader text={`${status.charAt(0).toUpperCase() + status.slice(1)}ing...`} />
+                      ) : (
+                        status.charAt(0).toUpperCase() + status.slice(1)
+                      )}
                     </button>
                   ))}
                 </div>

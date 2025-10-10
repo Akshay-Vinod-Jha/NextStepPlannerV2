@@ -16,6 +16,7 @@ import qrCode from "../assets/qr.jpg";
 import { sendBookingConfirmation } from "../utils/emailService";
 import { useSelector } from "react-redux";
 import { getApiUrl } from "../config/config.js";
+import { ButtonLoader, FullPageLoader } from "./LoadingComponents";
 
 const BookingForm = () => {
   const location = useLocation();
@@ -252,7 +253,11 @@ const BookingForm = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white mt-20">
+    <>
+      {isSubmitting && (
+        <FullPageLoader text="Processing your booking..." />
+      )}
+      <div className="min-h-screen bg-white mt-20">
       <div className="flex justify-start ml-10">
         <button
           onClick={() => navigate(-1)}
@@ -557,7 +562,11 @@ const BookingForm = () => {
                     : "bg-gradient-to-r from-orange-600 to-red-600 text-white hover:shadow-xl hover:from-orange-700 hover:to-red-700"
                 }`}
               >
-                {isSubmitting ? "Submitting..." : "Submit Booking"}
+                {isSubmitting ? (
+                  <ButtonLoader text="Processing Booking..." />
+                ) : (
+                  "Submit Booking"
+                )}
               </button>
             </form>
           </div>
@@ -624,7 +633,7 @@ const BookingForm = () => {
         </div>
       )}
     </div>
-  );
+    </>
 };
 
 export default BookingForm;
