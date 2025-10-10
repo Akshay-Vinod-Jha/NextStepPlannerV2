@@ -125,6 +125,17 @@ const AdminBookings = () => {
 
   // Send email when admin updates booking status
   const sendStatusUpdateEmail = async (booking, status) => {
+    // Only send email for confirmed and cancelled status
+    if (status !== "confirmed" && status !== "cancelled") {
+      return;
+    }
+
+    // Check if user email exists
+    if (!booking.userId?.email) {
+      toast.warning(`Booking ${status} but no email address found for customer`);
+      return;
+    }
+
     try {
       const emailData = {
         userName: booking.userId?.name || "Dear Customer",
@@ -139,19 +150,23 @@ const AdminBookings = () => {
         whatsappGroupLink: destination?.whatsappGroupLink,
       };
 
+      console.log("Sending email for status:", status, "to:", emailData.userEmail);
+
       let emailResult;
       if (status === "confirmed") {
         emailResult = await sendBookingConfirmedEmail(emailData);
         if (emailResult.success) {
-          toast.success("Confirmation email sent to customer!");
+          toast.success("✅ Confirmation email sent to customer!");
         } else {
+          console.error("Confirmation email failed:", emailResult.error);
           toast.warning("Booking confirmed but email notification failed");
         }
       } else if (status === "cancelled") {
         emailResult = await sendBookingCancelledEmail(emailData);
         if (emailResult.success) {
-          toast.success("Cancellation email sent to customer!");
+          toast.success("📧 Cancellation email sent to customer!");
         } else {
+          console.error("Cancellation email failed:", emailResult.error);
           toast.warning("Booking cancelled but email notification failed");
         }
       }
