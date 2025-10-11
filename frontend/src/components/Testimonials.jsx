@@ -133,16 +133,16 @@ const Testimonials = () => {
                 <p>
                   Currently pursuing my B.E. in Information Technology from Pune
                   Institute of Computer Technology (PICT), I've always believed
-                  that learning doesn't just happen in classrooms—it happens in
+                  that learning doesn't just happen in classrooms it happens in
                   the mountains, the forests, and on every trail that challenges
                   you to grow.
                 </p>
 
                 <p>
                   What started as my weekend escapes into nature soon turned
-                  into a vision—to create a community that finds joy, freedom,
+                  into a vision to create a community that finds joy, freedom,
                   and purpose in exploring the outdoors. At TREKORA, we don't
-                  just trek—we seek stories, build memories, and inspire
+                  just trek we seek stories, build memories, and inspire
                   courage.
                 </p>
 

@@ -41,6 +41,7 @@ const BookingForm = () => {
   const [previewImage, setPreviewImage] = useState(null);
   const [userEmail, setUserEmail] = useState("");
   const [userName, setUserName] = useState("");
+  const [isDragOver, setIsDragOver] = useState(false);
 
   const totalPrice = destination.price * formData.numPersons;
 
@@ -98,8 +99,8 @@ const BookingForm = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
+  // Common function to process file (for both click and drag/drop)
+  const processFile = (file) => {
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
         // 5MB limit
@@ -122,6 +123,40 @@ const BookingForm = () => {
       setPreviewImage(URL.createObjectURL(file));
       setErrors((prev) => ({ ...prev, paymentScreenshot: "" }));
     }
+  };
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    processFile(file);
+  };
+
+  // Drag and Drop Event Handlers
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(false);
+
+    const files = e.dataTransfer.files;
+    if (files && files[0]) {
+      processFile(files[0]);
+    }
+  };
+
+  const handleDragEnter = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
   };
 
   const removeImage = () => {
@@ -450,23 +485,33 @@ const BookingForm = () => {
 
                   {!previewImage ? (
                     <label
+                      onDragOver={handleDragOver}
+                      onDragLeave={handleDragLeave}
+                      onDrop={handleDrop}
+                      onDragEnter={handleDragEnter}
                       className={`flex flex-col items-center justify-center w-full h-40 border-2 border-dashed rounded-xl cursor-pointer transition-all duration-300 ${
                         errors.paymentScreenshot
                           ? "border-red-500 bg-red-50 hover:bg-red-100"
+                          : isDragOver
+                          ? "border-orange-500 bg-orange-100 scale-105"
                           : "border-orange-300 bg-orange-50 hover:bg-orange-100"
                       }`}
                     >
                       <div className="flex flex-col items-center justify-center pt-5 pb-6">
                         <Upload
-                          className={`h-10 w-10 mb-3 ${
+                          className={`h-10 w-10 mb-3 transition-all duration-300 ${
                             errors.paymentScreenshot
                               ? "text-red-500"
+                              : isDragOver
+                              ? "text-orange-600 animate-bounce"
                               : "text-orange-600"
                           }`}
                         />
                         <p className="mb-2 text-sm text-gray-600">
-                          <span className="font-semibold">Click to upload</span>{" "}
-                          or drag and drop
+                          <span className="font-semibold">
+                            {isDragOver ? "Drop file here" : "Click to upload"}
+                          </span>{" "}
+                          {!isDragOver && "or drag and drop"}
                         </p>
                         <p className="text-xs text-gray-500">
                           PNG, JPG or JPEG (MAX. 5MB)
