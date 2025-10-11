@@ -621,23 +621,33 @@ const BookingForm = () => {
 
         {/* Thank You Modal */}
         {showThankYou && (
-          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 transform transition-all duration-300 animate-in relative">
+          <div
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => {
+              setShowThankYou(false);
+              navigate("/");
+            }}
+          >
+            <div
+              className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 transform transition-all duration-300 animate-in relative"
+              onClick={(e) => e.stopPropagation()}
+            >
               {/* Close Button */}
               <button
-                onClick={() => setShowThankYou(false)}
+                onClick={() => {
+                  setShowThankYou(false);
+                  navigate("/");
+                }}
                 className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 transition-colors rounded-full hover:bg-gray-100"
               >
                 <X className="h-5 w-5" />
-              </button>
-
+              </button>{" "}
               {/* Success Icon */}
               <div className="flex justify-center mb-6">
                 <div className="bg-green-100 rounded-full p-4">
                   <CheckCircle className="h-16 w-16 text-green-600" />
                 </div>
               </div>
-
               {/* Thank You Message */}
               <div className="text-center mb-6">
                 <h2 className="text-3xl font-bold text-gray-900 mb-3">
@@ -656,7 +666,6 @@ const BookingForm = () => {
                   </p>
                 </div>
               </div>
-
               {/* WhatsApp Group Button */}
               {destination.whatsappGroupLink ? (
                 <a
@@ -672,7 +681,6 @@ const BookingForm = () => {
                   WhatsApp Group Not Available
                 </div>
               )}
-
               {/* Instagram Connect Button */}
               <a
                 href="https://www.instagram.com/trekora_org/?utm_source=qr&igsh=MW4wb3I5bTU4NW91MA%3D%3D#"
@@ -683,18 +691,32 @@ const BookingForm = () => {
                 <Instagram className="h-5 w-5" />
                 <span>Follow us on Instagram</span>
               </a>
+              {/* Action Buttons */}
+              <div className="space-y-3">
+                {/* Back to Home Button */}
+                <button
+                  onClick={() => {
+                    setShowThankYou(false);
+                    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+                    navigate("/");
+                  }}
+                  className="w-full bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white py-3 rounded-lg font-semibold transition-all duration-300"
+                >
+                  Back to Home
+                </button>
 
-              {/* Continue Button */}
-              <button
-                onClick={() => {
-                  setShowThankYou(false);
-                  window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-                  navigate("/destinations");
-                }}
-                className="w-full bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white py-3 rounded-lg font-semibold transition-all duration-300"
-              >
-                Browse More Treks
-              </button>
+                {/* Browse More Treks Button */}
+                <button
+                  onClick={() => {
+                    setShowThankYou(false);
+                    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+                    navigate("/destinations");
+                  }}
+                  className="w-full bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white py-3 rounded-lg font-semibold transition-all duration-300"
+                >
+                  Browse More Treks
+                </button>
+              </div>
             </div>
           </div>
         )}
